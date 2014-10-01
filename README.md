@@ -1,5 +1,7 @@
 # sgRNA Design Scripts
 
+Author: John S. Hawkins [really@gmail.com]
+
 ## Things you will need before you can run this code
 
 * OS X (might run on Linux/Windows, but caveat emptor
