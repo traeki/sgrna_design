@@ -14,6 +14,15 @@ Author: John S. Hawkins [really@gmail.com]
 
 * pysam
 
+## Gotchas
+
+* TODO(jsh): Code assumes "target_regions" file specifies "start" and "stop" in
+  0-based, half-open notation.  GFF is 1-based and closed notation.
+* TODO(jsh): Code outputs "start" and "stop" in 0-based, half-open notation.
+  So that also needs to be fixed.
+* TODO(jsh): Relatedly, make a gff parser, so users can ignore this issue
+  entirely.
+
 ## How to use this code
 
 Primarily you will use
