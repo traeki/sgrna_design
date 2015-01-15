@@ -47,8 +47,8 @@ def parse_gff_genes(gff_file):
       logging.error('Could not parse: {x}'.format(**vars()))
       sys.exit(1)
     if feature.lower() == 'gene':
+      gene = None
       for kv in attributes.split(';'):
-        gene = None
         k, v = kv.split('=')
         if k.lower() == 'name':
           gene = v

@@ -89,24 +89,24 @@ def extract_targets(infile_name, pam, target_len):
   return raw_targets
 
 
-def parse_target_regions(target_region_file):
+def parse_target_regions(target_regions_file):
   """Extract target regions into a more usable form.
 
   Args:
-    target_region_file: Name of input file.
+    target_regions_file: Name of input file.
   Returns:
     target_regions: list of (gene, chrom, start, end, strand) entries.
   """
   logging.info('Parsing target region file.')
   target_regions = list()
-  for x in open(target_region_file):
+  for x in open(target_regions_file):
     if x.startswith('#'):
       continue
     parts = x.strip().split('\t')
     try:
       (name,chrom,start,end,strand) = parts
     except ValueError:
-      trf = target_region_file
+      trf = target_regions_file
       logging.error('Could not parse from {trf}: {x}'.format(**vars()))
       sys.exit(1)
     try:
