@@ -110,7 +110,7 @@ def parse_target_regions(target_regions_file):
       logging.error('Could not parse from {trf}: {x}'.format(**vars()))
       sys.exit(1)
     try:
-      target_regions.append((name, chrom, int(start), int(end), strand))
+      target_regions.append((name, chrom, int(start)-1, int(end), strand))
     except ValueError:
       x = x.strip()
       logging.warning('Could not fully parse: {x}'.format(**vars()))
