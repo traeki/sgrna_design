@@ -14,15 +14,6 @@ Author: John S. Hawkins [really@gmail.com]
 
 * pysam
 
-## Gotchas
-
-* TODO(jsh): Code assumes "target_regions" file specifies "start" and "stop" in
-  0-based, half-open notation.  GFF is 1-based and closed notation.
-* TODO(jsh): Code outputs "start" and "stop" in 0-based, half-open notation.
-  So that also needs to be fixed.
-* TODO(jsh): Relatedly, make a gff parser, so users can ignore this issue
-  entirely.
-
 ## How to use this code
 
 Primarily you will use
@@ -31,11 +22,11 @@ Primarily you will use
 
 which you can call with -h to learn about its flags.  The two required arguments are
 
-    input_fasta_genome_name [testdata/test.fna]
+    input_fasta_genome_name [example -- testdata/test.fna]
 
 and
 
-    target_regions_file [testdata/test_regions.tsv]
+    target_regions_file [example -- testdata/test_regions.tsv]
 
 so to run on the sample files, you would call:
 
@@ -44,6 +35,8 @@ so to run on the sample files, you would call:
 If you have a gff file and want to use all the genes, you can try using (possibly with some modification)
 
     extract_gff_to_genes.py
+
+## IGNORE THE REST, REFERS TO CURRENTLY UNMAINTAINED SCRIPT
 
 Once you have created your target list with the build function, you can either search the file manually for your gene of interest, or run
 

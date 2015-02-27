@@ -144,6 +144,8 @@ def parse_args():
 
 
 def main():
+  logging.fatal('This script is not maintained, and will not work out of the box.')
+  sys.exit(2)
   args = parse_args()
   subselector_func = SUBSELECTOR_REGISTRY[args.subselector]
   logging.info('Reading in targets from {0}'.format(args.input_tsv_file.name))
