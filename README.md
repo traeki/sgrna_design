@@ -33,18 +33,18 @@ so to run on the sample files, you would call:
 
     ./build_sgrna_library.py --target_regions_file testdata/test_regions.tsv --input_fasta_genome_name testdata/doubletest.fna
 
-**Important note:** The fna identifier for each block of DNA (chromosome or, in
-the case of bacteria often the entire genome) must match the identifier in the
-gff file.  Shockingly often, this is not the case, even when the gff and the
-fasta come from the same source.  Try changing the identifier of your fasta
-file (the identifier is the text following the '>' character on the first line
-of each section) to match the identifier in your gff file before running these
-scripts.
-
 If you have a gff file and want to use all the genes, you can try using
 (possibly with some modification)
 
     extract_gff_to_genes.py
+
+**Important note:** The fna identifier for each block of DNA (chromosome or, in
+the case of bacteria often the entire genome) must match the identifier in the
+gff/region file.  Shockingly often, this is not the case, even when the
+gff/region and the fasta come from the same source.  Try changing the
+identifier of your fasta file (the identifier is the text following the '>'
+character on the first line of each section) to match the identifier in your
+gff/region file before running these scripts.
 
 ## IGNORE THE REST, REFERS TO CURRENTLY UNMAINTAINED SCRIPT
 
