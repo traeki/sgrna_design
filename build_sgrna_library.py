@@ -10,6 +10,7 @@ import itertools
 import logging
 import os.path
 import re
+import shutil
 import subprocess
 import string
 import sys
@@ -135,7 +136,7 @@ def chrom_lengths(fasta_file_name):
   return chrom_lens
 
 
-def ascribe_specificity(targets, genome_fasta_name):
+def ascribe_specificity(targets, genome_fasta_name, sam_copy):
   """Set up bowtie stuff and repeatedly call mark_specificity_tier."""
   # Is there a bowtie index yet?
   if not os.path.exists(genome_fasta_name + '.1.ebwt'):
@@ -154,10 +155,11 @@ def ascribe_specificity(targets, genome_fasta_name):
           '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
   for threshold in (39,30,20,11,1):
     mark_specificity_threshold(
-        targets, fastq_name, genome_fasta_name, threshold)
+        targets, fastq_name, genome_fasta_name, threshold, sam_copy)
 
 
-def mark_specificity_threshold(targets, fastq_name, genome_name, threshold):
+def mark_specificity_threshold(
+        targets, fastq_name, genome_name, threshold, sam_copy):
   # prep output files
   (_, specific_name) = tempfile.mkstemp()
   # Filter based on specificity
@@ -182,6 +184,8 @@ def mark_specificity_threshold(targets, fastq_name, genome_name, threshold):
   # Check for problems
   if bowtie_job.wait() != 0:
     sys.exit(bowtie_job.returncode)
+  if sam_copy:
+    shutil.copyfile(specific_name, sam_copy)
   aligned_reads = pysam.Samfile(specific_name)
   for x in aligned_reads:
     # flag 4 means unaligned, so skip those
@@ -268,6 +272,9 @@ def parse_args():
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument('--input_fasta_genome_name', type=str, required=True,
                       help='Location of genome file in FASTA format.')
+  parser.add_argument('--sam_copy', type=str,
+                      help='Copy of sam file from (final) bowtie run.',
+                      default=None)
   parser.add_argument('--tsv_file_name', type=str,
                       help='Output file to create.', default=None)
   parser.add_argument('--target_regions_file', type=str, required=True,
@@ -298,7 +305,7 @@ def main():
                                 args.pam,
                                 args.target_len)
   # Score list
-  ascribe_specificity(all_targets, args.input_fasta_genome_name)
+  ascribe_specificity(all_targets, args.input_fasta_genome_name, args.sam_copy)
   # Annotate list
   chrom_lens = chrom_lengths(args.input_fasta_genome_name)
   target_regions = parse_target_regions(args.target_regions_file)
