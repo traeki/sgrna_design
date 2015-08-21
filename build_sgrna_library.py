@@ -16,9 +16,6 @@ import string
 import sys
 import tempfile
 
-import pdb
-import pprint
-
 from Bio import SeqIO
 import pysam
 
@@ -228,8 +225,6 @@ def label_targets(targets,
   front, back = 0, 0
   for i, x in enumerate(target_regions):
     (gene, chrom, gene_start, gene_end, gene_strand) = x
-    if gene == 'yjeV':
-        pdb.set_trace()
     if i % 100 is 0:
       logging.info('Examining gene {i} [{gene}].'.format(**vars()))
     reverse_strand_gene = gene_strand == '-'
