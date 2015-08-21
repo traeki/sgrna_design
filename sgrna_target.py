@@ -105,7 +105,7 @@ class sgrna_target(object):
         self.target,
         self.pam,
         self.chrom,
-        self.start+1,
+        self.start,
         self.end,
         self.reverse,
         self.sense_strand,

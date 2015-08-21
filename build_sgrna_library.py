@@ -16,6 +16,9 @@ import string
 import sys
 import tempfile
 
+import pdb
+import pprint
+
 from Bio import SeqIO
 import pysam
 
@@ -69,8 +72,8 @@ def extract_targets(infile_name, pam, target_len):
                 hit.group(2),
                 hit.group(1)[-len(pam):],
                 chrom,
-                hit.start(),
-                hit.start() + target_len,
+                hit.start() + 1,
+                hit.start() + 1 + target_len,
                 False)
       name = t.id_str()
       raw_targets[name] = t
@@ -81,8 +84,8 @@ def extract_targets(infile_name, pam, target_len):
                 revcomp(hit.group(2)),
                 revcomp(hit.group(1))[-len(pam):],
                 chrom,
-                hit.start() + len(pam),
-                hit.start() + len(pam) + target_len,
+                hit.start() + 1 + len(pam),
+                hit.start() + 1 + len(pam) + target_len,
                 True)
       name = t.id_str()
       raw_targets[name] = t
@@ -111,7 +114,7 @@ def parse_target_regions(target_regions_file):
       logging.error('Could not parse from {trf}: {x}'.format(**vars()))
       sys.exit(1)
     try:
-      target_regions.append((name, chrom, int(start)-1, int(end), strand))
+      target_regions.append((name, chrom, int(start), int(end), strand))
     except ValueError:
       x = x.strip()
       logging.warning('Could not fully parse: {x}'.format(**vars()))
@@ -225,6 +228,8 @@ def label_targets(targets,
   front, back = 0, 0
   for i, x in enumerate(target_regions):
     (gene, chrom, gene_start, gene_end, gene_strand) = x
+    if gene == 'yjeV':
+        pdb.set_trace()
     if i % 100 is 0:
       logging.info('Examining gene {i} [{gene}].'.format(**vars()))
     reverse_strand_gene = gene_strand == '-'
