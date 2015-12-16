@@ -31,6 +31,24 @@ def revcomp(x):
   return x.translate(DNA_PAIRINGS)[::-1]
 
 
+def bool_from_rev(x):
+  if x == 'rev':
+    return True
+  elif x == 'fwd':
+    return False
+  else:
+    logging.fatal('Unrecognized bool signifier {x}'.format(**vars()))
+
+
+def bool_from_sense(x):
+  if x == 'sense':
+    return True
+  elif x == 'anti':
+    return False
+  else:
+    logging.fatal('Unrecognized bool signifier {x}'.format(**vars()))
+
+
 def none_or_bool(x):
   if x == 'None':
     return None
@@ -73,6 +91,7 @@ class sgrna_target(object):
     self.end = int(end)
     self.reverse = none_or_bool(reverse)
     self.sense_strand = None
+    self.weakness = 0
     self.specificity = 0
 
   @classmethod
@@ -90,69 +109,62 @@ class sgrna_target(object):
      end,
      reverse,
      sense_strand,
+     weakness,
      specificity) = tsv.strip().split(sep)
     t = sgrna_target(target, pam, chrom, start, end, reverse)
     t.gene = none_or_str(gene)
     t.offset = none_or_int(offset)
     t.sense_strand = none_or_bool(sense_strand)
-    t.specificity= none_or_int(specificity)
+    t.weakness = none_or_int(weakness)
+    t.specificity = none_or_int(specificity)
     return t
 
+  @classmethod
+  def header(cls, sep='\t'):
+    return sep.join([x.upper() for x in [
+      'gene',
+      'offset',
+      'target',
+      'pam',
+      'chrom',
+      'start',
+      'end',
+      'reverse',
+      'sense_strand',
+      'weakness',
+      'specificity']])
+
   def __str__(self, sep='\t'):
+    if self.reverse:
+      rev_str = 'rev'
+    else:
+      rev_str = 'fwd'
+    if self.sense_strand:
+      sst_str = 'sense'
+    else:
+      sst_str = 'anti'
     return sep.join([str(x) for x in [
-        self.gene,
-        self.offset,
-        self.target,
-        self.pam,
-        self.chrom,
-        self.start,
-        self.end,
-        self.reverse,
-        self.sense_strand,
-        self.specificity]])
+      self.gene,
+      self.offset,
+      self.target,
+      self.pam,
+      self.chrom,
+      self.start,
+      self.end,
+      rev_str,
+      sst_str,
+      self.weakness,
+      self.specificity]])
 
   def id_str(self, sep=';'):
     return sep.join([str(x) for x in [
-        self.target,
-        self.pam,
-        self.chrom,
-        self.start,
-        self.reverse]])
-
-  def primer_str(self, homology, sep='\t'):
-    """Generate the primer for this target.
-
-    Args:
-      homology: homology component of the primer.
-      sep: optional separator for return value fields.
-    Returns:
-      <sep>-delimited string describing primer info.
-    """
-    primer_seq = self.target.lower() + homology.upper()
-    return sep.join([
-        self.gene,
-        self.offset,
-        primer_seq])
+      self.target,
+      self.pam,
+      self.chrom,
+      self.start,
+      self.reverse]])
 
   def sequence_with_pam(self):
     """DNA sequence with trailing PAM in place."""
     return self.target + self.pam
 
-  def build_plasmid(self, homology, rev_primer, template, output_dir):
-    """Write out the ape plasmid for a target.
-
-    Args:
-      rev_primer: reverse primer to be used.
-      homology: homology component of the forward primer.
-      template: SeqIO.parsed genbank/ape record of template plasmid.
-      output_dir: path to directory in which to place new plasmid.
-    """
-    template = copy.deepcopy(template)
-    s = template.seq
-    start = s.find(revcomp(rev_primer)) + len(rev_primer)
-    end = s.find(homology)
-    template.seq = s[:start] + target + s[end:]
-    destination_file_name = os.path.join(
-        output_dir,
-        '{gene}.{offset}.sgrna.ape'.format(vars(self)))
-    SeqIO.write([template], destination_file_name, 'genbank')

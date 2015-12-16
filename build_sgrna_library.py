@@ -320,6 +320,7 @@ def main():
       'Writing {total_count} annotated targets to {args.tsv_file_name}'.format(
           **vars()))
   with open(args.tsv_file_name, 'w') as tsv_file:
+    tsv_file.write('#' + sgrna_target.header() + '\n')
     for target in all_targets:
       tsv_file.write(str(target) + '\n')
 
