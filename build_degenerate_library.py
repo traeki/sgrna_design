@@ -5,6 +5,7 @@
 import argparse
 import bisect
 import collections
+import contextlib
 import copy
 import itertools
 import logging
@@ -55,7 +56,7 @@ def extract_targets(infile_name, pam, target_len):
   # TODO(jsh): Do something with "bases" other than N, ATCG.
   logging.info('Extracting target set from {infile_name}.'.format(**vars()))
   fasta_sequences = SeqIO.parse(infile_name, 'fasta')
-  raw_targets = dict()
+  raw_targets = list()
   for seq_record in fasta_sequences:
     genome = seq_record.seq.upper()
     chrom = seq_record.name
@@ -75,7 +76,7 @@ def extract_targets(infile_name, pam, target_len):
                 hit.start() + 1 + target_len,
                 False)
       name = t.id_str()
-      raw_targets[name] = t
+      raw_targets.append((name, t))
     for hit in re.finditer(rev_pattern, str(genome)):
       if 'N' in hit.group(1):
         continue
@@ -87,7 +88,7 @@ def extract_targets(infile_name, pam, target_len):
                 hit.start() + 1 + len(pam) + target_len,
                 True)
       name = t.id_str()
-      raw_targets[name] = t
+      raw_targets.append((name, t))
   logging.info('{0} raw targets.'.format(len(raw_targets)))
   return raw_targets
 
@@ -149,13 +150,15 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
       sys.exit(build_job.returncode)
   # Generate faked FASTQ file
   phredString = '++++++++44444=======!4I'  # 33333333222221111111NGG
-  _, fastq_name = tempfile.mkstemp()
-  with open(fastq_name, 'w') as fastq_file:
-    for name, t in targets.iteritems():
-      fullseq = t.sequence_with_pam()
-      fastq_file.write(
-          '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
   for threshold in (95,90,80,70,60,50,40,30,20,11,1):
+    fastq_tempfile, fastq_name = tempfile.mkstemp()
+    with contextlib.closing(os.fdopen(fastq_tempfile, 'w')) as fastq_file:
+      for name, t in targets.iteritems():
+        if t.specificity > 0:
+          continue
+        fullseq = t.sequence_with_pam()
+        fastq_file.write(
+            '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
     mark_unadjusted_specificity_threshold(
         targets, fastq_name, genome_fasta_name, threshold, sam_copy)
   for _, t in targets.iteritems():
@@ -170,7 +173,7 @@ def mark_unadjusted_specificity_threshold(
   of the guide to the intended target.
   """
   # prep output files
-  (_, specific_name) = tempfile.mkstemp()
+  (specific_tempfile, specific_name) = tempfile.mkstemp()
   # Filter based on specificity
   command = ['bowtie']
   command.extend(['-S'])  # output SAM
@@ -178,8 +181,9 @@ def mark_unadjusted_specificity_threshold(
   command.extend(['-q'])  # input is fastq
   command.extend(['-a'])  # report each non-specific hit
   command.extend(['--best'])  # judge the *closest* non-specific match
-  command.extend(['--chunkmbs', 128])  # memory setting for --best flag
-  command.extend(['-p', 7])  # how many processors to use
+  command.extend(['--tryhard'])  # judge the *closest* non-specific match
+  command.extend(['--chunkmbs', 512])  # memory setting for --best flag
+  command.extend(['-p', 6])  # how many processors to use
   command.extend(['-n', 3])  # allowable mismatches in seed
   command.extend(['-l', 15])  # size of seed
   command.extend(['-e', threshold])  # dissimilarity sum before not non-specific hit
@@ -202,6 +206,7 @@ def mark_unadjusted_specificity_threshold(
       t = targets[x.qname]
       if t.specificity < threshold:
         t.specificity = threshold
+  os.close(specific_tempfile)
 
 
 def label_targets(targets,
@@ -227,6 +232,7 @@ def label_targets(targets,
   per_chrom_sorted_targets = collections.defaultdict(list)
   for name, x in targets.iteritems():
     per_chrom_sorted_targets[x.chrom].append(x)
+    # TODO(jsh): Change this so that it only dumps (unlabeled) targets
     if include_unlabeled:
       anno_targets.append(copy.deepcopy(x))
   for x in per_chrom_sorted_targets:
@@ -259,8 +265,9 @@ def label_targets(targets,
              chrom_targets[front].start < gene_start):
         front += 1
     overlap = chrom_targets[front:back]
-    if len(overlap) == 0:
-      logging.warn('No overlapping targets for gene {gene}.'.format(**vars()))
+    # TODO(jsh): maybe change this warning to play nicely with chunks somehow
+    # if len(overlap) == 0:
+    #   logging.warn('No overlapping targets for gene {gene}.'.format(**vars()))
     for target in overlap:
       if reverse_strand_gene:
         offset = gene_end - target.end
@@ -297,6 +304,7 @@ def parse_args():
   # TODO(jsh) Before using different PAMs, need phred faking flag for PAM.
   parser.add_argument('--pam', default='.gg', type=str,
                       help='NOT YET IMPLEMENTED DO NOT USE!')
+  parser.add_argument('--chunk_size', default=1000, type=int, help='')
   parser.add_argument('--double_variants', default=20, type=int,
                       help='How many random samples of double-degenerate variants to use.')
   # TODO(jsh) Need to take correct fraction of phred-score string to unbreak.
@@ -315,46 +323,67 @@ def main():
   clean_targets = extract_targets(args.input_fasta_genome_name,
                                   args.pam,
                                   args.target_len)
-  # Spawn degenerate variants
-  all_targets=dict()
-  counter = 0
-  for name, t in clean_targets.iteritems():
-    counter += 1
-    if random.random() < 0.001:
-      logging.info('Varying target {0}: {1}'.format(counter, name))
-    all_targets[name] = t
-    for variant, weakness in degvar.all_single_variants(t.target):
-      new_target = copy.deepcopy(t)
-      new_target.target = variant
-      new_target.weakness = weakness
-      name = new_target.id_str()
-      all_targets[name] = new_target
-    for variant, weakness in degvar.n_double_variants(t.target, args.double_variants):
-      new_target = copy.deepcopy(t)
-      new_target.target = variant
-      new_target.weakness = weakness
-      name = new_target.id_str()
-      all_targets[name] = new_target
-  logging.info('{0} all targets.'.format(len(all_targets)))
-  # Score list
-  ascribe_specificity(all_targets, args.input_fasta_genome_name, args.sam_copy)
-  # Annotate list
   chrom_lens = chrom_lengths(args.input_fasta_genome_name)
-  target_regions = parse_target_regions(args.target_regions_file)
-  all_targets = label_targets(all_targets,
-                              target_regions,
-                              chrom_lens,
-                              args.include_unlabeled,
-                              args.allow_partial_overlap)
-  # Generate output
-  total_count = len(all_targets)
-  logging.info(
-      'Writing {total_count} annotated targets to {args.tsv_file_name}'.format(
-          **vars()))
+  # with open('/tmp/original_targets.tsv', 'w') as debug_out:
+  #   for target in clean_targets:
+  #     debug_out.write(str(target) + '\n')
+  # print chrom_lens
+  # sys.exit(1)
+
+  # Spawn degenerate variants
+  counter = [0]
   with open(args.tsv_file_name, 'w') as tsv_file:
-    tsv_file.write('#' + sgrna_target.header() + '\n')
-    for target in all_targets:
-      tsv_file.write(str(target) + '\n')
+    def process_chunk(chunk):
+      chunk_targets=dict()
+      for name, t in chunk:
+        counter[0] += 1
+        if random.random() < 0.001:
+          logging.info('Varying target {0}: {1}'.format(counter[0], name))
+        chunk_targets[name] = t
+        for variant, weakness in degvar.all_single_variants(t.target):
+          new_target = copy.deepcopy(t)
+          new_target.target = variant
+          new_target.weakness = weakness
+          name = new_target.id_str()
+          chunk_targets[name] = new_target
+        i = args.double_variants
+        for variant, weakness in degvar.random_double_variants(t.target):
+          if i == 0:
+            break
+          new_target = copy.deepcopy(t)
+          new_target.target = variant
+          new_target.weakness = weakness
+          name = new_target.id_str()
+          # Make sure we actually get args.double_variants worth
+          if name in chunk_targets:
+            continue
+          else:
+            i -= 1
+          chunk_targets[name] = new_target
+      logging.info('{0} all targets.'.format(len(chunk_targets)))
+      # Score list
+      ascribe_specificity(
+          chunk_targets,
+          args.input_fasta_genome_name,
+          args.sam_copy)
+      # Annotate list
+      target_regions = parse_target_regions(args.target_regions_file)
+      chunk_targets = label_targets(chunk_targets,
+                                  target_regions,
+                                  chrom_lens,
+                                  args.include_unlabeled,
+                                  args.allow_partial_overlap)
+      # Generate output
+      total_count = len(chunk_targets)
+      logging.info(
+          'Writing {total_count} annotated targets to {args.tsv_file_name}'.format(
+              **vars()))
+      for target in chunk_targets:
+        tsv_file.write(str(target) + '\n')
+
+    tsv_file.write('#' + clean_targets[0][1].header() + '\n')
+    for start in range(0, len(clean_targets), args.chunk_size):
+      process_chunk(clean_targets[start:start+args.chunk_size])
 
 ##############################################
 if __name__ == "__main__":

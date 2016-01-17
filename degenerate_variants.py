@@ -40,11 +40,6 @@ def all_single_variants(target):
         new_target[i] = x
         yield (''.join(new_target), COST_VECTOR[i])
 
-def n_double_variants(target, n):
-  generator = random_double_variants(target)
-  for i in xrange(n):
-    yield generator.next()
-
 def random_double_variants(target):
   if len(target) != len(COST_VECTOR):
     logging.fatal('target and COST_VECTOR length not equal.'.format(**vars()))
@@ -55,6 +50,6 @@ def random_double_variants(target):
     new_target = list(target)
     new_target[i] = random.choice(BASES)
     new_target[j] = random.choice(BASES)
-    if i == j or new_target[i] == target[i] or new_target[j] == target[j]:
+    if new_target[i] == target[i] or new_target[j] == target[j]:
       continue
     yield (''.join(new_target), COST_VECTOR[i] + COST_VECTOR[j])
