@@ -89,7 +89,7 @@ class sgrna_target(object):
     self.chrom = str(chrom)
     self.start = int(start)
     self.end = int(end)
-    self.reverse = none_or_bool(reverse)
+    self.reverse = bool_from_rev(reverse)
     self.sense_strand = None
     self.weakness = 0
     self.specificity = 0
@@ -114,7 +114,7 @@ class sgrna_target(object):
     t = sgrna_target(target, pam, chrom, start, end, reverse)
     t.gene = none_or_str(gene)
     t.offset = none_or_int(offset)
-    t.sense_strand = none_or_bool(sense_strand)
+    t.sense_strand = bool_from_sense(sense_strand)
     t.weakness = none_or_int(weakness)
     t.specificity = none_or_int(specificity)
     return t

@@ -5,6 +5,7 @@
 import argparse
 import bisect
 import collections
+import contextlib
 import copy
 import itertools
 import logging
@@ -129,6 +130,7 @@ def chrom_lengths(fasta_file_name):
   Returns:
     chrom_lens: dict mapping fasta entry name (chrom) to sequence length.
   """
+  logging.info('Parsing fasta file to check chromosome sizes.')
   chrom_lens = dict()
   fasta_sequences = SeqIO.parse(fasta_file_name, 'fasta')
   for seq_record in fasta_sequences:
@@ -161,7 +163,7 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
 def mark_specificity_threshold(
         targets, fastq_name, genome_name, threshold, sam_copy):
   # prep output files
-  (_, specific_name) = tempfile.mkstemp()
+  (specific_tempfile, specific_name) = tempfile.mkstemp()
   # Filter based on specificity
   command = ['bowtie']
   command.extend(['-S'])  # output SAM
@@ -169,8 +171,9 @@ def mark_specificity_threshold(
   command.extend(['-q'])  # input is fastq
   command.extend(['-a'])  # report each non-specific hit
   command.extend(['--best'])  # judge the *closest* non-specific match
-  command.extend(['--chunkmbs', 128])  # memory setting for --best flag
-  command.extend(['-p', 7])  # how many processors to use
+  command.extend(['--tryhard'])  # judge the *closest* non-specific match
+  command.extend(['--chunkmbs', 256])  # memory setting for --best flag
+  command.extend(['-p', 6])  # how many processors to use
   command.extend(['-n', 3])  # allowable mismatches in seed
   command.extend(['-l', 15])  # size of seed
   command.extend(['-e', threshold])  # dissimilarity sum before not non-specific hit
@@ -193,6 +196,7 @@ def mark_specificity_threshold(
       t = targets[x.qname]
       if t.specificity < threshold:
         t.specificity = threshold
+  os.close(specific_tempfile)
 
 
 def label_targets(targets,
@@ -213,24 +217,28 @@ def label_targets(targets,
   logging.info(
       'Labeling targets based on region file.'.format(**vars()))
   anno_targets = list()
+  found = set()
   counter = 0
   # Organize targets by chromosome and then start location.
   per_chrom_sorted_targets = collections.defaultdict(list)
   for name, x in targets.iteritems():
     per_chrom_sorted_targets[x.chrom].append(x)
-    if include_unlabeled:
-      anno_targets.append(copy.deepcopy(x))
   for x in per_chrom_sorted_targets:
     per_chrom_sorted_targets[x].sort(key=lambda x:(x.start, x.end))
-  front, back = 0, 0
+  per_chrom_bounds = dict()
+  for chrom in chrom_lens:
+    per_chrom_bounds[chrom] = (0,0) # Check out the bound variables
   for i, x in enumerate(target_regions):
     (gene, chrom, gene_start, gene_end, gene_strand) = x
     if i % 100 is 0:
       logging.info('Examining gene {i} [{gene}].'.format(**vars()))
+    front, back = per_chrom_bounds[chrom]
     reverse_strand_gene = gene_strand == '-'
     if gene_start >= chrom_lens[chrom]:
       continue
     chrom_targets = per_chrom_sorted_targets[chrom]
+    # TODO(jsh): If a gene is contained within another gene, we might double
+    # label outer-gene guides that are later than the end of the inner gene
     if allow_partial_overlap:
       # Shift back index until target.start >= gene_end
       while (back < len(chrom_targets) and
@@ -250,9 +258,11 @@ def label_targets(targets,
              chrom_targets[front].start < gene_start):
         front += 1
     overlap = chrom_targets[front:back]
+    per_chrom_bounds[chrom] = (front, back) # Return bound vars to shelf
     if len(overlap) == 0:
       logging.warn('No overlapping targets for gene {gene}.'.format(**vars()))
     for target in overlap:
+      found.add(target.id_str())
       if reverse_strand_gene:
         offset = gene_end - target.end
       else:
@@ -262,6 +272,10 @@ def label_targets(targets,
       returnable.offset = offset
       returnable.sense_strand = (reverse_strand_gene == target.reverse)
       anno_targets.append(returnable)
+  if include_unlabeled:
+    for name, target in targets.iteritems():
+      if name not in found:
+        anno_targets.append(copy.deepcopy(target))
   return anno_targets
 
 

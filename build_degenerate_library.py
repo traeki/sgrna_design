@@ -133,6 +133,7 @@ def chrom_lengths(fasta_file_name):
   Returns:
     chrom_lens: dict mapping fasta entry name (chrom) to sequence length.
   """
+  logging.info('Parsing fasta file to check chromosome sizes.')
   chrom_lens = dict()
   fasta_sequences = SeqIO.parse(fasta_file_name, 'fasta')
   for seq_record in fasta_sequences:
@@ -151,7 +152,8 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
       sys.exit(build_job.returncode)
   # Generate faked FASTQ file
   phredString = '++++++++44444=======!4I'  # 33333333222221111111NGG
-  for threshold in (95,90,80,70,60,50,40,30,20,11,1):
+  # for threshold in (95,90,80,70,60,50,40,30,20,11,1):
+  for threshold in (60,50,40,30,20,11,1):
     fastq_tempfile, fastq_name = tempfile.mkstemp()
     with contextlib.closing(os.fdopen(fastq_tempfile, 'w')) as fastq_file:
       for name, t in targets.iteritems():
@@ -183,7 +185,7 @@ def mark_unadjusted_specificity_threshold(
   command.extend(['-a'])  # report each non-specific hit
   command.extend(['--best'])  # judge the *closest* non-specific match
   command.extend(['--tryhard'])  # judge the *closest* non-specific match
-  command.extend(['--chunkmbs', 512])  # memory setting for --best flag
+  command.extend(['--chunkmbs', 256])  # memory setting for --best flag
   command.extend(['-p', 6])  # how many processors to use
   command.extend(['-n', 3])  # allowable mismatches in seed
   command.extend(['-l', 15])  # size of seed
@@ -293,6 +295,22 @@ def label_targets(targets,
   return anno_targets
 
 
+def parse_manual_targets(manual_target_file):
+  logging.info('Parsing manual target file.')
+  manual_targets = list()
+  for x in open(manual_target_file):
+    name, target, pam = x.strip().split('\t')
+    t = sgrna_target(
+        target,
+        pam,
+        name,
+        0,
+        0,
+        False)
+    manual_targets.append((t.id_str(), t))
+  return manual_targets
+
+
 def parse_args():
   """Read in the arguments for the sgrna library construction code."""
   logging.info('Parsing command line.')
@@ -300,6 +318,8 @@ def parse_args():
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument('--input_fasta_genome_name', type=str, required=True,
                       help='Location of genome file in FASTA format.')
+  parser.add_argument('--manual_target_set', type=str, required=False,
+                      help='Location of manual target list.')
   parser.add_argument('--sam_copy', type=str,
                       help='Copy of sam file from (final) bowtie run.',
                       default=None)
@@ -332,9 +352,12 @@ def parse_args():
 def main():
   args = parse_args()
   # Build initial list
-  clean_targets = extract_targets(args.input_fasta_genome_name,
-                                  args.pam,
-                                  args.target_len)
+  if args.manual_target_set is not None:
+    clean_targets = parse_manual_targets(args.manual_target_set)
+  else:
+    clean_targets = extract_targets(args.input_fasta_genome_name,
+                                    args.pam,
+                                    args.target_len)
   chrom_lens = chrom_lengths(args.input_fasta_genome_name)
   # with open('/tmp/original_targets.tsv', 'w') as debug_out:
   #   for target in clean_targets:
@@ -359,7 +382,8 @@ def main():
           name = new_target.id_str()
           chunk_targets[name] = new_target
         i = args.double_variants
-        for variant, weakness in degvar.random_double_variants(t.target):
+        # TODO(jsh): don't ignore indices!
+        for variant, weakness in degvar.random_variants(t.target, _, 2):
           if i == 0:
             break
           new_target = copy.deepcopy(t)
@@ -379,12 +403,15 @@ def main():
           args.input_fasta_genome_name,
           args.sam_copy)
       # Annotate list
-      target_regions = parse_target_regions(args.target_regions_file)
-      chunk_targets = label_targets(chunk_targets,
-                                  target_regions,
-                                  chrom_lens,
-                                  args.include_unlabeled,
-                                  args.allow_partial_overlap)
+      if args.manual_target_set is None:
+        target_regions = parse_target_regions(args.target_regions_file)
+        chunk_targets = label_targets(chunk_targets,
+                                      target_regions,
+                                      chrom_lens,
+                                      args.include_unlabeled,
+                                      args.allow_partial_overlap)
+      else:
+        chunk_targets = [x for n,x in chunk_targets.iteritems()]
       # Generate output
       total_count = len(chunk_targets)
       logging.info(
