@@ -86,7 +86,7 @@ def random_variants(target, number):
   target = target.upper()
   while True:
     keep = True
-    indices = tuple(random.sample(xrange(len(target)), number))
+    indices = tuple(sorted(random.sample(xrange(len(target)), number)))
     new_target = list(target)
     for index in indices:
       new_target[index] = random.choice(BASES)

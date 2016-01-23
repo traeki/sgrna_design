@@ -165,8 +165,7 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
     mark_unadjusted_specificity_threshold(
         targets, fastq_name, genome_fasta_name, threshold, sam_copy)
   for _, t in targets.iteritems():
-    if t.specificity != 0:
-      t.specificity -= t.weakness
+    t.specificity -= t.weakness
 
 def mark_unadjusted_specificity_threshold(
         targets, fastq_name, genome_name, threshold, sam_copy):
@@ -320,6 +319,8 @@ def parse_args():
                       help='Location of genome file in FASTA format.')
   parser.add_argument('--manual_target_set', type=str, required=False,
                       help='Location of manual target list.')
+  parser.add_argument('--pregen_target_set', type=file, required=False,
+                      help=':')
   parser.add_argument('--sam_copy', type=str,
                       help='Copy of sam file from (final) bowtie run.',
                       default=None)
@@ -337,7 +338,7 @@ def parse_args():
   parser.add_argument('--pam', default='.gg', type=str,
                       help='NOT YET IMPLEMENTED DO NOT USE!')
   parser.add_argument('--chunk_size', default=1000, type=int, help='')
-  parser.add_argument('--double_variants', default=20, type=int,
+  parser.add_argument('--total_variants', default=25, type=int,
                       help='How many random samples of double-degenerate variants to use.')
   # TODO(jsh) Need to take correct fraction of phred-score string to unbreak.
   parser.add_argument('--target_len', default=20, type=int,
@@ -354,6 +355,12 @@ def main():
   # Build initial list
   if args.manual_target_set is not None:
     clean_targets = parse_manual_targets(args.manual_target_set)
+  elif args.pregen_target_set is not None:
+    clean_targets = list()
+    for x in args.pregen_target_set:
+      if not x.startswith('#'):
+        target = sgrna_target.from_tsv(x)
+        clean_targets.append((target.id_str(), target))
   else:
     clean_targets = extract_targets(args.input_fasta_genome_name,
                                     args.pam,
@@ -374,36 +381,27 @@ def main():
         counter[0] += 1
         if random.random() < 0.001:
           logging.info('Varying target {0}: {1}'.format(counter[0], name))
-        chunk_targets[name] = t
-        for variant, weakness in degvar.all_single_variants(t.target):
+        variants = degvar.fractioned_variants(t.target, args.total_variants)
+        for x in variants:
+          variant, _, weakness = x
           new_target = copy.deepcopy(t)
           new_target.target = variant
           new_target.weakness = weakness
-          name = new_target.id_str()
-          chunk_targets[name] = new_target
-        i = args.double_variants
-        # TODO(jsh): don't ignore indices!
-        for variant, weakness in degvar.random_variants(t.target, _, 2):
-          if i == 0:
-            break
-          new_target = copy.deepcopy(t)
-          new_target.target = variant
-          new_target.weakness = weakness
-          name = new_target.id_str()
-          # Make sure we actually get args.double_variants worth
-          if name in chunk_targets:
-            continue
-          else:
-            i -= 1
-          chunk_targets[name] = new_target
-      logging.info('{0} all targets.'.format(len(chunk_targets)))
+          # TODO(jsh): do something with indices
+          new_name = new_target.id_str()
+          # NOTE(jsh): We just totally lose the repeated originals here
+          if new_name in chunk_targets and weakness != 0:
+            logging.warning('{new_name} already in dict!'.format(**vars()))
+          chunk_targets[new_name] = new_target
+      logging.info('{0} chunk targets.'.format(len(chunk_targets)))
       # Score list
       ascribe_specificity(
           chunk_targets,
           args.input_fasta_genome_name,
           args.sam_copy)
+      logging.info('{0} chunk targets.'.format(len(chunk_targets)))
       # Annotate list
-      if args.manual_target_set is None:
+      if args.manual_target_set is None and args.pregen_target_set is None:
         target_regions = parse_target_regions(args.target_regions_file)
         chunk_targets = label_targets(chunk_targets,
                                       target_regions,
@@ -419,6 +417,10 @@ def main():
               **vars()))
       for target in chunk_targets:
         tsv_file.write(str(target) + '\n')
+        # HORRIBLE HACK TO OUTPUT MULTIPLE COPIES OF ORIGINAL GUIDE
+        if target.weakness == 0:
+          for i in range(int(args.total_variants * 0.2 * 0.4) - 1):
+            tsv_file.write(str(target) + '\n')
 
     tsv_file.write('#' + clean_targets[0][1].header() + '\n')
     for start in range(0, len(clean_targets), args.chunk_size):
