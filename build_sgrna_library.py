@@ -150,12 +150,15 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
   # Generate faked FASTQ file
   phredString = '++++++++44444=======!4I'  # 33333333222221111111NGG
   _, fastq_name = tempfile.mkstemp()
-  with open(fastq_name, 'w') as fastq_file:
-    for name, t in targets.iteritems():
-      fullseq = t.sequence_with_pam()
-      fastq_file.write(
-          '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
   for threshold in (39,30,20,11,1):
+    fastq_tempfile, fastq_name = tempfile.mkstemp()
+    with contextlib.closing(os.fdopen(fastq_tempfile, 'w')) as fastq_file:
+      for name, t in targets.iteritems():
+        if t.specificity > 0:
+          continue
+        fullseq = t.sequence_with_pam()
+        fastq_file.write(
+            '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
     mark_specificity_threshold(
         targets, fastq_name, genome_fasta_name, threshold, sam_copy)
 

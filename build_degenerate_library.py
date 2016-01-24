@@ -346,7 +346,7 @@ def parse_args():
   args = parser.parse_args()
   if args.tsv_file_name is None:
     base = os.path.splitext(args.input_fasta_genome_name)[0]
-    args.tsv_file_name =  base + '.targets.all.tsv'
+    args.tsv_file_name =  base + '.degen.tsv'
   return args
 
 

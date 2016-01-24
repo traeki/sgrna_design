@@ -32,6 +32,8 @@ def revcomp(x):
 
 
 def bool_from_rev(x):
+  if type(x) is bool:
+    return x
   if x == 'rev':
     return True
   elif x == 'fwd':
@@ -41,6 +43,8 @@ def bool_from_rev(x):
 
 
 def bool_from_sense(x):
+  if type(x) is bool:
+    return x
   if x == 'sense':
     return True
   elif x == 'anti':

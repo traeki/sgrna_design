@@ -43,106 +43,46 @@ SUBSELECTOR_REGISTRY = dict()
 def two_antisense_deglib(gene, target_group):
   chosen_subset = list()
   target_group = list(target_group)
-  anti_sense_targets = [x for x in target_group if not x.sense_strand]
+  specific_targets = [x for x in target_group if x.specificity > 30]
+  anti_sense_targets = [x for x in specific_targets if not x.sense_strand]
   anti_sense_targets.sort(key=lambda x:x.offset)
-  count = len(anti_sense_targets)
-  if count == 0:
-    logging.warn('No anti-sense targets for gene {gene}.'.format(**vars()))
+  try:
+    first = itertools.dropwhile(lambda x: False, anti_sense_targets).next()
+    chosen_subset.append(first)
+    second = itertools.dropwhile(lambda x: x.offset < (first.offset + 20),
+                                 anti_sense_targets).next()
+    chosen_subset.append(second)
+  except StopIteration:
+    n = len(chosen_subset)
+    logging.warn(
+        '{n} non-overlapping antisense guides for {gene}'.format(**vars()))
     return chosen_subset
-  if anti_sense_targets[-1].offset - anti_sense_targets[0].offset < 20:
-    'Insufficient non-overlapping antisense for {gene}.'.format(**vars())
-    chosen_subset.extend(anti_sense_targets[:2])
-    return chosen_subset
-  first = anti_sense_targets[0]
-  second = itertools.dropwhile(lambda x: x.offset < (first.offset + 20),
-                               anti_sense_targets).next()
-  chosen_subset.extend([first, second])
   return chosen_subset
 SUBSELECTOR_REGISTRY['two_antisense_deglib'] = two_antisense_deglib
 
 
-# DEPRECATED -- Maintain this set for now for github searching...
-# def one_antisense_weissman(gene, target_group):
-#   chosen_subset = list()
-#   target_group = list(target_group)
-#   anti_sense_targets = [x for x in list(target_group) if not x.sense_strand]
-#   count = len(anti_sense_targets)
-#   if count == 0:
-#     logging.warn('No targets for gene {gene}.'.format(**vars()))
-#     return chosen_subset
-#   specific_targets = [x for x in anti_sense_targets if x.min_unique]
-#   count = len(specific_targets)
-#   if count == 0:
-#     logging.warn('No specific targets for gene {gene}.'.format(**vars()))
-#     return chosen_subset
-#   chosen_subset.extend(specific_targets[:1])
-#   return chosen_subset
-# SUBSELECTOR_REGISTRY['one_antisense_weissman'] = one_antisense_weissman
-#
-#
-# def select_four_lsq(gene, target_group):
-#   chosen_subset = list()
-#   # Choose one sense-strand target.
-#   target_group = list(target_group)
-#   sense_targets = [x for x in list(target_group) if x.sense_strand]
-#   count = len(sense_targets)
-#   if count == 0:
-#     logging.warn('No sense-strand targets for gene {gene}.'.format(**vars()))
-#   chosen_subset.extend(sense_targets[:1])
-#   # Choose three anti-sense targets, distributed as far as possible.
-#   anti_sense_targets = [x for x in list(target_group) if not x.sense_strand]
-#   count = len(anti_sense_targets)
-#   if count < 3:
-#     if count > 0:
-#       logging.warn(
-#           'Only {count} anti-sense targets for gene {gene}.'.format(**vars()))
-#     else:
-#       logging.warn('No anti-sense targets for gene {gene}.'.format(**vars()))
-#     chosen_subset.extend(anti_sense_targets)
-#     return chosen_subset
-#   def ideal_candidate(x):
-#     return (x.min_unique <= 12)
-#   def first_backoff(x):
-#     return (x.min_unique <= 15)
-#   def second_backoff(x):
-#     return (x.min_unique is not None)
-#   working_set = [x for x in anti_sense_targets if ideal_candidate(x)]
-#   if len(working_set) < 3:
-#     # Prefer seed-specific matches.
-#     working_set = [x for x in anti_sense_targets if first_backoff(x)]
-#   if len(working_set) < 3:
-#     # Tolerate some weaker matches.
-#     working_set = [x for x in anti_sense_targets if second_backoff(x)]
-#   if len(working_set) < 3:
-#     # Screw it, just take everything.
-#     working_set = anti_sense_targets
-#   # Take the ends.
-#   working_set.sort(key=lambda x: x.offset)
-#   chosen_subset.append(working_set[0])
-#   chosen_subset.append(working_set[-1])
-#   # And the closest thing to the middle.
-#   front = working_set[0].offset
-#   back = working_set[-1].offset
-#   center = (front + back) / 2
-#   chosen_subset.append(min(working_set[1:-1],
-#                            key=lambda x: abs(x.offset - center)))
-#   return chosen_subset
-# SUBSELECTOR_REGISTRY['select_four_lsq'] = select_four_lsq
-#
-#
-# def select_one_sense(gene, target_group):
-#   targets = [x for x in list(target_group) if x.sense_strand]
-#   count = len(targets)
-#   if count == 0:
-#     logging.warn('No targets for gene {gene}.'.format(**vars()))
-#     return targets
-#   return targets[:1]
-#
-#
-# def three_at_random(gene, target_group):
-#   """Just pick 3 arbitrarily from the input and return them."""
-#   return random.sample(list(target_group), 3)
-# SUBSELECTOR_REGISTRY['three_at_random'] = three_at_random
+def three_template_deglib(gene, target_group):
+  chosen_subset = list()
+  target_group = list(target_group)
+  specific_targets = [x for x in target_group if x.specificity > 30]
+  sense_targets = [x for x in specific_targets if x.sense_strand]
+  sense_targets.sort(key=lambda x:x.offset)
+  try:
+    first = itertools.dropwhile(lambda x: False, sense_targets).next()
+    chosen_subset.append(first)
+    second = itertools.dropwhile(lambda x: x.offset < (first.offset + 20),
+                                 sense_targets).next()
+    chosen_subset.append(second)
+    third = itertools.dropwhile(lambda x: x.offset < (second.offset + 20),
+                                 sense_targets).next()
+    chosen_subset.append(third)
+  except StopIteration:
+    n = len(chosen_subset)
+    logging.warn(
+        '{n} non-overlapping template guides for {gene}'.format(**vars()))
+    return chosen_subset
+  return chosen_subset
+SUBSELECTOR_REGISTRY['three_template_deglib'] = three_template_deglib
 
 
 def parse_args():
