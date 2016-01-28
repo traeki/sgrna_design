@@ -40,49 +40,70 @@ def revcomp(x):
 SUBSELECTOR_REGISTRY = dict()
 
 
-def two_antisense_deglib(gene, target_group):
-  chosen_subset = list()
-  target_group = list(target_group)
-  specific_targets = [x for x in target_group if x.specificity > 30]
-  anti_sense_targets = [x for x in specific_targets if not x.sense_strand]
-  anti_sense_targets.sort(key=lambda x:x.offset)
-  try:
-    first = itertools.dropwhile(lambda x: False, anti_sense_targets).next()
-    chosen_subset.append(first)
-    second = itertools.dropwhile(lambda x: x.offset < (first.offset + 20),
-                                 anti_sense_targets).next()
-    chosen_subset.append(second)
-  except StopIteration:
-    n = len(chosen_subset)
-    logging.warn(
-        '{n} non-overlapping antisense guides for {gene}'.format(**vars()))
-    return chosen_subset
-  return chosen_subset
-SUBSELECTOR_REGISTRY['two_antisense_deglib'] = two_antisense_deglib
+def partition_overlapping(inlist):
+  good = list()
+  bad = list()
+  if not inlist:
+    return (good, bad)
+  good.append(inlist[0])
+  for x in inlist[1:]:
+    if x.offset < (good[-1].offset + 20):
+      bad.append(x)
+    else:
+      good.append(x)
+  return (good, bad)
 
 
-def three_template_deglib(gene, target_group):
-  chosen_subset = list()
+def antisense(gene, target_group, wanted):
   target_group = list(target_group)
-  specific_targets = [x for x in target_group if x.specificity > 30]
-  sense_targets = [x for x in specific_targets if x.sense_strand]
-  sense_targets.sort(key=lambda x:x.offset)
-  try:
-    first = itertools.dropwhile(lambda x: False, sense_targets).next()
-    chosen_subset.append(first)
-    second = itertools.dropwhile(lambda x: x.offset < (first.offset + 20),
-                                 sense_targets).next()
-    chosen_subset.append(second)
-    third = itertools.dropwhile(lambda x: x.offset < (second.offset + 20),
-                                 sense_targets).next()
-    chosen_subset.append(third)
-  except StopIteration:
-    n = len(chosen_subset)
-    logging.warn(
-        '{n} non-overlapping template guides for {gene}'.format(**vars()))
-    return chosen_subset
-  return chosen_subset
-SUBSELECTOR_REGISTRY['three_template_deglib'] = three_template_deglib
+  target_group.sort(key=lambda x:x.offset)
+  # for each specificity threshold, take n_non_overlapping, or just n
+  sense_targets = [x for x in target_group if x.sense_strand]
+  anti_sense_targets = [x for x in target_group if not x.sense_strand]
+  for threshold in [30, 20, 10, 0]:
+    specific = lambda x: x.specificity > threshold
+    specific_targets = [x for x in anti_sense_targets if specific(x)]
+    nonspecific_targets = [x for x in anti_sense_targets if not specific(x)]
+    (spaced, overlapped) = partition_overlapping(specific_targets)
+    # Try to get non_overlapping, specific guides
+    if len(spaced) >= wanted:
+      return spaced[:wanted]
+    # Okay, can we get enough if we allow overlap?
+    if len(specific_targets) >= wanted:
+      needed = wanted - len(spaced)
+      return spaced + overlapped[:needed]
+  # if that never works, dig into nonspecific_targets
+  if len(anti_sense_targets) >= wanted:
+    needed = wanted - len(specific_targets)
+    return specific_targets + nonspecific_targets[:needed]
+  # if that doesn't even work, dip into the other strand, and then give up.
+  needed = wanted - len(anti_sense_targets)
+  return anti_sense_targets + sense_targets[:needed]
+SUBSELECTOR_REGISTRY['antisense'] = antisense
+
+
+def template(gene, target_group, wanted):
+  target_group = list(target_group)
+  target_group.sort(key=lambda x:x.offset)
+  # for each specificity threshold, take n_non_overlapping, or just n
+  sense_targets = [x for x in target_group if x.sense_strand]
+  anti_sense_targets = [x for x in target_group if not x.sense_strand]
+  for threshold in [30, 20, 10, 0]:
+    specific = lambda x: x.specificity > threshold
+    specific_targets = [x for x in sense_targets if specific(x)]
+    nonspecific_targets = [x for x in sense_targets if not specific(x)]
+    (spaced, overlapped) = partition_overlapping(specific_targets)
+    # Try to get non_overlapping, specific guides
+    if len(spaced) >= wanted:
+      return spaced[:wanted]
+    # Okay, can we get enough if we allow overlap?
+    if len(specific_targets) >= wanted:
+      needed = wanted - len(spaced)
+      return spaced + overlapped[:needed]
+  # if that never works, dig into nonspecific_targets and then give up
+  needed = wanted - len(specific_targets)
+  return specific_targets + nonspecific_targets[:needed]
+SUBSELECTOR_REGISTRY['template'] = template
 
 
 def parse_args():
@@ -93,8 +114,8 @@ def parse_args():
   parser.add_argument('--input_tsv_file', type=file, help=':')
   parser.add_argument(
       '--output_tsv_file_name', type=str, help=':', default=None)
-  parser.add_argument('--subselector', type=str, help=':',
-                      default='three_at_random')
+  parser.add_argument('--subselector', type=str, help=':', required=True)
+  parser.add_argument('--wanted', type=int, help=':', default=3)
   parser.add_argument('--gene_list', type=file, help=':', default=None)
   parser.add_argument('--exclude_listed_genes', help=':',
                       action='store_true', default=False)
@@ -129,7 +150,7 @@ def main():
     if counter % 500 == 0:
       logging.info('Selecting targets for gene {gene}'.format(**vars()))
     counter += 1
-    chosen_targets.extend(subselector_func(gene, cluster))
+    chosen_targets.extend(subselector_func(gene, cluster, args.wanted))
   logging.info('Writing targets to {0}'.format(args.output_tsv_file_name))
   with open(args.output_tsv_file_name, 'w') as output_file:
     for x in chosen_targets:

@@ -148,7 +148,8 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
       logging.fatal('Failed to build bowtie index')
       sys.exit(build_job.returncode)
   # Generate faked FASTQ file
-  phredString = '++++++++44444=======!4I'  # 33333333222221111111NGG
+  # phredString = '++++++++44444=======!4I'  # 33333333222221111111NGG
+  phredString = 'I4!=======44444++++++++'  # 33333333222221111111NGG
   _, fastq_name = tempfile.mkstemp()
   for threshold in (39,30,20,11,1):
     fastq_tempfile, fastq_name = tempfile.mkstemp()
@@ -156,7 +157,7 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
       for name, t in targets.iteritems():
         if t.specificity > 0:
           continue
-        fullseq = t.sequence_with_pam()
+        fullseq = revcomp(t.sequence_with_pam())
         fastq_file.write(
             '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
     mark_specificity_threshold(

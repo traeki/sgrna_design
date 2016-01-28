@@ -151,7 +151,8 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
       logging.fatal('Failed to build bowtie index')
       sys.exit(build_job.returncode)
   # Generate faked FASTQ file
-  phredString = '++++++++44444=======!4I'  # 33333333222221111111NGG
+  # phredString = '++++++++44444=======!4I'  # 33333333222221111111NGG
+  phredString = 'I4!=======44444++++++++'  # 33333333222221111111NGG
   # for threshold in (95,90,80,70,60,50,40,30,20,11,1):
   for threshold in (60,50,40,30,20,11,1):
     fastq_tempfile, fastq_name = tempfile.mkstemp()
@@ -159,7 +160,7 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
       for name, t in targets.iteritems():
         if t.specificity > 0:
           continue
-        fullseq = t.sequence_with_pam()
+        fullseq = revcomp(t.sequence_with_pam())
         fastq_file.write(
             '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
     mark_unadjusted_specificity_threshold(
@@ -326,8 +327,8 @@ def parse_args():
                       default=None)
   parser.add_argument('--tsv_file_name', type=str,
                       help='Output file to create.', default=None)
-  parser.add_argument('--target_regions_file', type=str, required=True,
-                      help='Location of target regions file in tsv format.')
+  # parser.add_argument('--target_regions_file', type=str, required=True,
+  #                     help='Location of target regions file in tsv format.')
   parser.add_argument('--include_unlabeled', action='store_true',
       default=False,
       help='Output targets even if they overlapped no target region.')
@@ -362,9 +363,10 @@ def main():
         target = sgrna_target.from_tsv(x)
         clean_targets.append((target.id_str(), target))
   else:
-    clean_targets = extract_targets(args.input_fasta_genome_name,
-                                    args.pam,
-                                    args.target_len)
+    sys.exit(2)
+    # clean_targets = extract_targets(args.input_fasta_genome_name,
+    #                                 args.pam,
+    #                                 args.target_len)
   chrom_lens = chrom_lengths(args.input_fasta_genome_name)
   # with open('/tmp/original_targets.tsv', 'w') as debug_out:
   #   for target in clean_targets:
@@ -387,11 +389,12 @@ def main():
           new_target = copy.deepcopy(t)
           new_target.target = variant
           new_target.weakness = weakness
+          new_target.specificity = 0
           # TODO(jsh): do something with indices
           new_name = new_target.id_str()
-          # NOTE(jsh): We just totally lose the repeated originals here
           if new_name in chunk_targets and weakness != 0:
             logging.warning('{new_name} already in dict!'.format(**vars()))
+          # NOTE(jsh): We just totally lose the repeated originals here
           chunk_targets[new_name] = new_target
       logging.info('{0} chunk targets.'.format(len(chunk_targets)))
       # Score list
@@ -401,15 +404,15 @@ def main():
           args.sam_copy)
       logging.info('{0} chunk targets.'.format(len(chunk_targets)))
       # Annotate list
-      if args.manual_target_set is None and args.pregen_target_set is None:
-        target_regions = parse_target_regions(args.target_regions_file)
-        chunk_targets = label_targets(chunk_targets,
-                                      target_regions,
-                                      chrom_lens,
-                                      args.include_unlabeled,
-                                      args.allow_partial_overlap)
-      else:
-        chunk_targets = [x for n,x in chunk_targets.iteritems()]
+      # if args.manual_target_set is None and args.pregen_target_set is None:
+      #   target_regions = parse_target_regions(args.target_regions_file)
+      #   chunk_targets = label_targets(chunk_targets,
+      #                                 target_regions,
+      #                                 chrom_lens,
+      #                                 args.include_unlabeled,
+      #                                 args.allow_partial_overlap)
+      # else:
+      chunk_targets = [x for n,x in chunk_targets.iteritems()]
       # Generate output
       total_count = len(chunk_targets)
       logging.info(
@@ -419,7 +422,9 @@ def main():
         tsv_file.write(str(target) + '\n')
         # HORRIBLE HACK TO OUTPUT MULTIPLE COPIES OF ORIGINAL GUIDE
         if target.weakness == 0:
-          for i in range(int(args.total_variants * 0.2 * 0.4) - 1):
+          orig_count = min(int(args.total_variants * 0.2 * 0.4),
+                           degvar.ORIG_MAX)
+          for i in range(orig_count - 1):
             tsv_file.write(str(target) + '\n')
 
     tsv_file.write('#' + clean_targets[0][1].header() + '\n')

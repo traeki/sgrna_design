@@ -26,17 +26,21 @@ BASES = 'ATCG'
 
 COST_VECTOR=[10,10,10,10,10,10,10,10,19,19,19,19,19,28,28,28,28,28,28,28]
 TAIL = range(0,8)
+TAIL_MAX = 3*len(TAIL)
 MIDDLE = range(8, 13)
+MIDDLE_MAX = 3*len(MIDDLE)
 SEED = range(13,20)
+SEED_MAX = 3*len(SEED)
+ORIG_MAX = 4
 
 def revcomp(x):
   return x.translate(DNA_PAIRINGS)[::-1]
 
 def fractioned_variants(target, count):
-  orig_count = int(count * 0.2 * 0.4)
-  tail_count = int(count * 0.2 * 0.6)
-  middle_count = int(count * 0.2)
-  seed_count = int(count * 0.2)
+  orig_count = min(int(count * 0.2 * 0.4), ORIG_MAX)
+  tail_count = min(int(count * 0.2 * 0.6), TAIL_MAX)
+  middle_count = min(int(count * 0.2), MIDDLE_MAX)
+  seed_count = min(int(count * 0.2), SEED_MAX)
   double_count = count - sum([orig_count, tail_count, middle_count, seed_count])
   variants = set()
   single_iterator = random_variants(target, 1)
@@ -86,7 +90,9 @@ def random_variants(target, number):
   target = target.upper()
   while True:
     keep = True
-    indices = tuple(sorted(random.sample(xrange(len(target)), number)))
+    indices = tuple(sorted(random.sample(xrange(0, len(target)), number)))
+    # Swap-in hack for max's first-base constraint
+    # indices = tuple(sorted(random.sample(xrange(1, len(target)), number)))
     new_target = list(target)
     for index in indices:
       new_target[index] = random.choice(BASES)
