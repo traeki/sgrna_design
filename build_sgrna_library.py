@@ -91,6 +91,36 @@ def extract_targets(infile_name, pam, target_len):
   return raw_targets
 
 
+def get_regions_from_genbank(genbank_file):
+  """Extract genbank regions into a more usable form.
+
+  Args:
+    genbank_file: Name of input file.
+  Returns:
+    target_regions: list of (gene, chrom, start, end, strand) entries.
+  """
+  target_regions = list()
+  for item in SeqIO.parse(genbank_file, 'genbank'):
+    chrom = item.id
+    for feature in item.features:
+      if feature.type != 'gene':
+        continue
+      name = feature.qualifiers['locus_tag'][0]
+      start = int(feature.location.start)
+      end = int(feature.location.end)
+      if feature.location.strand == 1:
+        target_regions.append((name, chrom, start, end, '+'))
+      elif feature.location.strand == -1:
+        target_regions.append((name, chrom, start, end, '-'))
+      else:
+        # If we don't know what strand it's on, just claim all targets.
+        target_regions.append((name, chrom, start, end, '+'))
+        target_regions.append((name, chrom, start, end, '-'))
+  logging.info(
+      'Found {0} target regions in genbank file.'.format(len(target_regions)))
+  return target_regions
+
+
 def parse_target_regions(target_regions_file):
   """Extract target regions into a more usable form.
 
@@ -288,14 +318,17 @@ def parse_args():
   logging.info('Parsing command line.')
   parser = argparse.ArgumentParser(
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-  parser.add_argument('--input_fasta_genome_name', type=str, required=True,
+  group = parser.add_mutually_exclusive_group(required=True)
+  group.add_argument('--input_genbank_genome_name', type=str,
+                      help='Location of genome file in GenBank format.')
+  group.add_argument('--input_fasta_genome_name', type=str,
                       help='Location of genome file in FASTA format.')
   parser.add_argument('--sam_copy', type=str,
                       help='Copy of sam file from (final) bowtie run.',
                       default=None)
   parser.add_argument('--tsv_file_name', type=str,
                       help='Output file to create.', default=None)
-  parser.add_argument('--target_regions_file', type=str, required=True,
+  parser.add_argument('--target_regions_file', type=str,
                       help='Location of target regions file in tsv format.')
   parser.add_argument('--include_unlabeled', action='store_true',
       default=False,
@@ -304,6 +337,7 @@ def parse_args():
       dest='allow_partial_overlap', default=True,
       help='Only label targets which are fully contained in the region.')
   # TODO(jsh) Before using different PAMs, need phred faking flag for PAM.
+  # TODO(jsh) allow "n" characters by substituting to ".".
   parser.add_argument('--pam', default='.gg', type=str,
                       help='NOT YET IMPLEMENTED DO NOT USE!')
   # TODO(jsh) Need to take correct fraction of phred-score string to unbreak.
@@ -311,8 +345,19 @@ def parse_args():
                       help='NOT YET IMPLEMENTED DO NOT USE!')
   args = parser.parse_args()
   if args.tsv_file_name is None:
-    base = os.path.splitext(args.input_fasta_genome_name)[0]
+    if args.input_fasta_genome_name is not None:
+      base = os.path.splitext(args.input_fasta_genome_name)[0]
+    else:
+      base = os.path.splitext(args.input_genbank_genome_name)[0]
     args.tsv_file_name =  base + '.targets.all.tsv'
+  if (args.target_regions_file is None and
+      args.input_genbank_genome_name is None):
+    logging.fatal('No regions file specified with fasta genome.')
+    sys.exit(2)
+  if args.input_fasta_genome_name is None:
+    args.input_fasta_genome_name = args.input_genbank_genome_name + '.fasta'
+    SeqIO.convert(args.input_genbank_genome_name, 'genbank',
+                  args.input_fasta_genome_name, 'fasta')
   return args
 
 
@@ -326,7 +371,10 @@ def main():
   ascribe_specificity(all_targets, args.input_fasta_genome_name, args.sam_copy)
   # Annotate list
   chrom_lens = chrom_lengths(args.input_fasta_genome_name)
-  target_regions = parse_target_regions(args.target_regions_file)
+  if args.input_genbank_genome_name is not None:
+    target_regions = get_regions_from_genbank(args.input_genbank_genome_name)
+  else:
+    target_regions = parse_target_regions(args.target_regions_file)
   all_targets = label_targets(all_targets,
                               target_regions,
                               chrom_lens,

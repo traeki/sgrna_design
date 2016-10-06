@@ -1,0 +1,602 @@
+LOCUS       U00096               10080 bp    DNA     circular BCT 01-AUG-2014
+DEFINITION  Escherichia coli str. K-12 substr. MG1655, complete genome.
+ACCESSION   U00096
+VERSION     U00096.3  GI:545778205
+DBLINK      BioProject: PRJNA225
+            BioSample: SAMN02604091
+KEYWORDS    .
+SOURCE      Escherichia coli str. K-12 substr. MG1655
+  ORGANISM  Escherichia coli str. K-12 substr. MG1655
+            Bacteria; Proteobacteria; Gammaproteobacteria; Enterobacteriales;
+            Enterobacteriaceae; Escherichia.
+REFERENCE   1  (bases 1 to 10080)
+  AUTHORS   Blattner,F.R., Plunkett,G. III, Bloch,C.A., Perna,N.T., Burland,V.,
+            Riley,M., Collado-Vides,J., Glasner,J.D., Rode,C.K., Mayhew,G.F.,
+            Gregor,J., Davis,N.W., Kirkpatrick,H.A., Goeden,M.A., Rose,D.J.,
+            Mau,B. and Shao,Y.
+  TITLE     The complete genome sequence of Escherichia coli K-12
+  JOURNAL   Science 277 (5331), 1453-1462 (1997)
+   PUBMED   9278503
+REFERENCE   2  (bases 1 to 10080)
+  AUTHORS   Hayashi,K., Morooka,N., Yamamoto,Y., Fujita,K., Isono,K., Choi,S.,
+            Ohtsubo,E., Baba,T., Wanner,B.L., Mori,H. and Horiuchi,T.
+  TITLE     Highly accurate genome sequences of Escherichia coli K-12 strains
+            MG1655 and W3110
+  JOURNAL   Mol. Syst. Biol. 2, 2006 (2006)
+   PUBMED   16738553
+REFERENCE   3  (bases 1 to 10080)
+  AUTHORS   Riley,M., Abe,T., Arnaud,M.B., Berlyn,M.K., Blattner,F.R.,
+            Chaudhuri,R.R., Glasner,J.D., Horiuchi,T., Keseler,I.M., Kosuge,T.,
+            Mori,H., Perna,N.T., Plunkett,G. III, Rudd,K.E., Serres,M.H.,
+            Thomas,G.H., Thomson,N.R., Wishart,D. and Wanner,B.L.
+  TITLE     Escherichia coli K-12: a cooperatively developed annotation
+            snapshot--2005
+  JOURNAL   Nucleic Acids Res. 34 (1), 1-9 (2006)
+   PUBMED   16397293
+  REMARK    Publication Status: Online-Only
+REFERENCE   4  (bases 1 to 10080)
+  AUTHORS   Arnaud,M., Berlyn,M.K.B., Blattner,F.R., Galperin,M.Y.,
+            Glasner,J.D., Horiuchi,T., Kosuge,T., Mori,H., Perna,N.T.,
+            Plunkett,G. III, Riley,M., Rudd,K.E., Serres,M.H., Thomas,G.H. and
+            Wanner,B.L.
+  TITLE     Workshop on Annotation of Escherichia coli K-12
+  JOURNAL   Unpublished
+  REMARK    Woods Hole, Mass., on 14-18 November 2003 (sequence corrections)
+REFERENCE   5  (bases 1 to 10080)
+  AUTHORS   Glasner,J.D., Perna,N.T., Plunkett,G. III, Anderson,B.D.,
+            Bockhorst,J., Hu,J.C., Riley,M., Rudd,K.E. and Serres,M.H.
+  TITLE     ASAP: Escherichia coli K-12 strain MG1655 version m56
+  JOURNAL   Unpublished
+  REMARK    ASAP download 10 June 2004 (annotation updates)
+REFERENCE   6  (bases 1 to 10080)
+  AUTHORS   Hayashi,K., Morooka,N., Mori,H. and Horiuchi,T.
+  TITLE     A more accurate sequence comparison between genomes of Escherichia
+            coli K12 W3110 and MG1655 strains
+  JOURNAL   Unpublished
+  REMARK    GenBank accessions AG613214 to AG613378 (sequence corrections)
+REFERENCE   7  (bases 1 to 10080)
+  AUTHORS   Perna,N.T.
+  TITLE     Escherichia coli K-12 MG1655 yqiK-rfaE intergenic region, genomic
+            sequence correction
+  JOURNAL   Unpublished
+  REMARK    GenBank accession AY605712 (sequence corrections)
+REFERENCE   8  (bases 1 to 10080)
+  AUTHORS   Rudd,K.E.
+  TITLE     A manual approach to accurate translation start site annotation: an
+            E. coli K-12 case study
+  JOURNAL   Unpublished
+REFERENCE   9  (bases 1 to 10080)
+  AUTHORS   Blattner,F.R. and Plunkett,G. III.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (16-JAN-1997) Laboratory of Genetics, University of
+            Wisconsin, 425G Henry Mall, Madison, WI 53706-1580, USA
+REFERENCE   10 (bases 1 to 10080)
+  AUTHORS   Blattner,F.R. and Plunkett,G. III.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (02-SEP-1997) Laboratory of Genetics, University of
+            Wisconsin, 425G Henry Mall, Madison, WI 53706-1580, USA
+REFERENCE   11 (bases 1 to 10080)
+  AUTHORS   Plunkett,G. III.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (13-OCT-1998) Laboratory of Genetics, University of
+            Wisconsin, 425G Henry Mall, Madison, WI 53706-1580, USA
+REFERENCE   12 (bases 1 to 10080)
+  AUTHORS   Plunkett,G. III.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (10-JUN-2004) Laboratory of Genetics, University of
+            Wisconsin, 425G Henry Mall, Madison, WI 53706-1580, USA
+  REMARK    Sequence update by submitter
+REFERENCE   13 (bases 1 to 10080)
+  AUTHORS   Plunkett,G. III.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (07-FEB-2006) Laboratory of Genetics, University of
+            Wisconsin, 425G Henry Mall, Madison, WI 53706-1580, USA
+  REMARK    Protein updates by submitter
+REFERENCE   14 (bases 1 to 10080)
+  AUTHORS   Rudd,K.E.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (24-APR-2007) Department of Biochemistry and Molecular
+            Biology, University of Miami Miller School of Medicine, 118 Gautier
+            Bldg., Miami, FL 33136, USA
+  REMARK    Annotation update from ecogene.org as a multi-database
+            collaboration
+REFERENCE   15 (bases 1 to 10080)
+  AUTHORS   Rudd,K.E.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (06-FEB-2013) Department of Biochemistry and Molecular
+            Biology, University of Miami Miller School of Medicine, 118 Gautier
+            Bldg., Miami, FL 33136, USA
+  REMARK    Sequence update by submitter
+REFERENCE   16 (bases 1 to 10080)
+  AUTHORS   Blattner,F.R. and Plunkett,G. III.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (26-SEP-2013) Laboratory of Genetics, University of
+            Wisconsin, 425G Henry Mall, Madison, WI 53706-1580, USA
+  REMARK    Sequence update by submitter
+REFERENCE   17 (bases 1 to 10080)
+  AUTHORS   Blattner,F.R. and Plunkett,G. III.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (15-NOV-2013) Laboratory of Genetics, University of
+            Wisconsin, 425G Henry Mall, Madison, WI 53706-1580, USA
+  REMARK    Protein update by submitter
+REFERENCE   18 (bases 1 to 10080)
+  AUTHORS   Blattner,F.R. and Plunkett,G. III.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (30-JUL-2014) Laboratory of Genetics, University of
+            Wisconsin, 425G Henry Mall, Madison, WI 53706-1580, USA
+  REMARK    Protein update by submitter
+COMMENT     On Sep 26, 2013 this sequence version replaced gi:48994873.
+            Current U00096 annotation updates are derived from EcoGene
+            http://ecogene.org. Suggestions for updates can be sent to Dr.
+            Kenneth Rudd (krudd@miami.edu). These updates are being generated
+            from a collaboration that also includes ASAP/ERIC, the Coli Genetic
+            Stock Center, EcoliHub, EcoCyc, RegulonDB and UniProtKB/Swiss-Prot.
+FEATURES             Location/Qualifiers
+     source          1..10080
+                     /organism="Escherichia coli str. K-12 substr. MG1655"
+                     /mol_type="genomic DNA"
+                     /strain="K-12"
+                     /sub_strain="MG1655"
+                     /db_xref="taxon:511145"
+     gene            190..255
+                     /gene="thrL"
+                     /locus_tag="b0001"
+                     /gene_synonym="ECK0001"
+                     /gene_synonym="JW4367"
+                     /db_xref="EcoGene:EG11277"
+     CDS             190..255
+                     /gene="thrL"
+                     /locus_tag="b0001"
+                     /gene_synonym="ECK0001"
+                     /gene_synonym="JW4367"
+                     /function="leader; Amino acid biosynthesis: Threonine"
+                     /note="GO_process: GO:0009088 - threonine biosynthetic
+                     process"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="thr operon leader peptide"
+                     /protein_id="AAC73112.1"
+                     /db_xref="GI:1786182"
+                     /db_xref="ASAP:ABE-0000006"
+                     /db_xref="UniProtKB/Swiss-Prot:P0AD86"
+                     /db_xref="EcoGene:EG11277"
+                     /translation="MKRISTTITTTITITTGNGAG"
+     gene            337..2799
+                     /gene="thrA"
+                     /locus_tag="b0002"
+                     /gene_synonym="ECK0002"
+                     /gene_synonym="Hs"
+                     /gene_synonym="JW0001"
+                     /gene_synonym="thrA1"
+                     /gene_synonym="thrA2"
+                     /gene_synonym="thrD"
+                     /db_xref="EcoGene:EG10998"
+     CDS             337..2799
+                     /gene="thrA"
+                     /locus_tag="b0002"
+                     /gene_synonym="ECK0002"
+                     /gene_synonym="Hs"
+                     /gene_synonym="JW0001"
+                     /gene_synonym="thrA1"
+                     /gene_synonym="thrA2"
+                     /gene_synonym="thrD"
+                     /EC_number="1.1.1.3"
+                     /EC_number="2.7.2.4"
+                     /function="enzyme; Amino acid biosynthesis: Threonine"
+                     /experiment="N-terminus verified by Edman degradation:
+                     PMID 354697,4562989"
+                     /note="bifunctional: aspartokinase I (N-terminal);
+                     homoserine dehydrogenase I (C-terminal);
+                     GO_component: GO:0005737 - cytoplasm;
+                     GO_process: GO:0009088 - threonine biosynthetic process;
+                     GO_process: GO:0009086 - methionine biosynthetic process;
+                     GO_process: GO:0009090 - homoserine biosynthetic process"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="Bifunctional aspartokinase/homoserine
+                     dehydrogenase 1"
+                     /protein_id="AAC73113.1"
+                     /db_xref="GI:1786183"
+                     /db_xref="ASAP:ABE-0000008"
+                     /db_xref="UniProtKB/Swiss-Prot:P00561"
+                     /db_xref="EcoGene:EG10998"
+                     /translation="MRVLKFGGTSVANAERFLRVADILESNARQGQVATVLSAPAKIT
+                     NHLVAMIEKTISGQDALPNISDAERIFAELLTGLAAAQPGFPLAQLKTFVDQEFAQIK
+                     HVLHGISLLGQCPDSINAALICRGEKMSIAIMAGVLEARGHNVTVIDPVEKLLAVGHY
+                     LESTVDIAESTRRIAASRIPADHMVLMAGFTAGNEKGELVVLGRNGSDYSAAVLAACL
+                     RADCCEIWTDVDGVYTCDPRQVPDARLLKSMSYQEAMELSYFGAKVLHPRTITPIAQF
+                     QIPCLIKNTGNPQAPGTLIGASRDEDELPVKGISNLNNMAMFSVSGPGMKGMVGMAAR
+                     VFAAMSRARISVVLITQSSSEYSISFCVPQSDCVRAERAMQEEFYLELKEGLLEPLAV
+                     TERLAIISVVGDGMRTLRGISAKFFAALARANINIVAIAQGSSERSISVVVNNDDATT
+                     GVRVTHQMLFNTDQVIEVFVIGVGGVGGALLEQLKRQQSWLKNKHIDLRVCGVANSKA
+                     LLTNVHGLNLENWQEELAQAKEPFNLGRLIRLVKEYHLLNPVIVDCTSSQAVADQYAD
+                     FLREGFHVVTPNKKANTSSMDYYHQLRYAAEKSRRKFLYDTNVGAGLPVIENLQNLLN
+                     AGDELMKFSGILSGSLSYIFGKLDEGMSFSEATTLAREMGYTEPDPRDDLSGMDVARK
+                     LLILARETGRELELADIEIEPVLPAEFNAEGDVAAFMANLSQLDDLFAARVAKARDEG
+                     KVLRYVGNIDEDGVCRVKIAEVDGNDPLFKVKNGENALAFYSHYYQPLPLVLRGYGAG
+                     NDVTAAGVFADLLRTLSWKLGV"
+     gene            2801..3733
+                     /gene="thrB"
+                     /locus_tag="b0003"
+                     /gene_synonym="ECK0003"
+                     /gene_synonym="JW0002"
+                     /db_xref="EcoGene:EG10999"
+     CDS             2801..3733
+                     /gene="thrB"
+                     /locus_tag="b0003"
+                     /gene_synonym="ECK0003"
+                     /gene_synonym="JW0002"
+                     /EC_number="2.7.1.39"
+                     /function="enzyme; Amino acid biosynthesis: Threonine"
+                     /note="GO_component: GO:0005737 - cytoplasm;
+                     GO_process: GO:0009088 - threonine biosynthetic process"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="homoserine kinase"
+                     /protein_id="AAC73114.1"
+                     /db_xref="GI:1786184"
+                     /db_xref="ASAP:ABE-0000010"
+                     /db_xref="UniProtKB/Swiss-Prot:P00547"
+                     /db_xref="EcoGene:EG10999"
+                     /translation="MVKVYAPASSANMSVGFDVLGAAVTPVDGALLGDVVTVEAAETF
+                     SLNNLGRFADKLPSEPRENIVYQCWERFCQELGKQIPVAMTLEKNMPIGSGLGSSACS
+                     VVAALMAMNEHCGKPLNDTRLLALMGELEGRISGSIHYDNVAPCFLGGMQLMIEENDI
+                     ISQQVPGFDEWLWVLAYPGIKVSTAEARAILPAQYRRQDCIAHGRHLAGFIHACYSRQ
+                     PELAAKLMKDVIAEPYRERLLPGFRQARQAVAEIGAVASGISGSGPTLFALCDKPETA
+                     QRVADWLGKNYLQNQEGFVHICRLDTAGARVLEN"
+     gene            3734..5020
+                     /gene="thrC"
+                     /locus_tag="b0004"
+                     /gene_synonym="ECK0004"
+                     /gene_synonym="JW0003"
+                     /db_xref="EcoGene:EG11000"
+     CDS             3734..5020
+                     /gene="thrC"
+                     /locus_tag="b0004"
+                     /gene_synonym="ECK0004"
+                     /gene_synonym="JW0003"
+                     /EC_number="4.2.3.1"
+                     /function="enzyme; Amino acid biosynthesis: Threonine"
+                     /experiment="N-terminus verified by Edman degradation:
+                     PMID 9298646,9600841,9740056"
+                     /note="GO_component: GO:0005737 - cytoplasm;
+                     GO_process: GO:0009088 - threonine biosynthetic process"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="L-threonine synthase"
+                     /protein_id="AAC73115.1"
+                     /db_xref="GI:1786185"
+                     /db_xref="ASAP:ABE-0000012"
+                     /db_xref="UniProtKB/Swiss-Prot:P00934"
+                     /db_xref="EcoGene:EG11000"
+                     /translation="MKLYNLKDHNEQVSFAQAVTQGLGKNQGLFFPHDLPEFSLTEID
+                     EMLKLDFVTRSAKILSAFIGDEIPQEILEERVRAAFAFPAPVANVESDVGCLELFHGP
+                     TLAFKDFGGRFMAQMLTHIAGDKPVTILTATSGDTGAAVAHAFYGLPNVKVVILYPRG
+                     KISPLQEKLFCTLGGNIETVAIDGDFDACQALVKQAFDDEELKVALGLNSANSINISR
+                     LLAQICYYFEAVAQLPQETRNQLVVSVPSGNFGDLTAGLLAKSLGLPVKRFIAATNVN
+                     DTVPRFLHDGQWSPKATQATLSNAMDVSQPNNWPRVEELFRRKIWQLKELGYAAVDDE
+                     TTQQTMRELKELGYTSEPHAAVAYRALRDQLNPGEYGLFLGTAHPAKFKESVEAILGE
+                     TLDLPKELAERADLPLLSHNLPADFAALRKLMMNHQ"
+     gene            5234..5530
+                     /gene="yaaX"
+                     /locus_tag="b0005"
+                     /gene_synonym="ECK0005"
+                     /gene_synonym="JW0004"
+                     /db_xref="EcoGene:EG14384"
+     CDS             5234..5530
+                     /gene="yaaX"
+                     /locus_tag="b0005"
+                     /gene_synonym="ECK0005"
+                     /gene_synonym="JW0004"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="DUF2502 family putative periplasmic protein"
+                     /protein_id="AAC73116.1"
+                     /db_xref="GI:1786186"
+                     /db_xref="ASAP:ABE-0000015"
+                     /db_xref="UniProtKB/Swiss-Prot:P75616"
+                     /db_xref="EcoGene:EG14384"
+                     /translation="MKKMQSIVLALSLVLVAPMAAQAAEITLVPSVKLQIGDRDNRGY
+                     YWDGGHWRDHGWWKQHYEWRGNRWHLHGPPPPPRHHKKAPHDHHGGHGPGKHHR"
+     repeat_region   5565..5669
+                     /note="RIP1 (repetitive extragenic palindromic) element;
+                     contains 2 REP sequences and 1 IHF site"
+     gene            complement(5683..6459)
+                     /gene="yaaA"
+                     /locus_tag="b0006"
+                     /gene_synonym="ECK0006"
+                     /gene_synonym="JW0005"
+                     /db_xref="EcoGene:EG10011"
+     CDS             complement(5683..6459)
+                     /gene="yaaA"
+                     /locus_tag="b0006"
+                     /gene_synonym="ECK0006"
+                     /gene_synonym="JW0005"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="peroxide resistance protein, lowers
+                     intracellular iron"
+                     /protein_id="AAC73117.1"
+                     /db_xref="GI:1786187"
+                     /db_xref="ASAP:ABE-0000018"
+                     /db_xref="UniProtKB/Swiss-Prot:P0A8I3"
+                     /db_xref="EcoGene:EG10011"
+                     /translation="MLILISPAKTLDYQSPLTTTRYTLPELLDNSQQLIHEARKLTPP
+                     QISTLMRISDKLAGINAARFHDWQPDFTPANARQAILAFKGDVYTGLQAETFSEDDFD
+                     FAQQHLRMLSGLYGVLRPLDLMQPYRLEMGIRLENARGKDLYQFWGDIITNKLNEALA
+                     AQGDNVVINLASDEYFKSVKPKKLNAEIIKPVFLDEKNGKFKIISFYAKKARGLMSRF
+                     IIENRLTKPEQLTGFNSEGYFFDEDSSSNGELVFKRYEQR"
+     gene            complement(6529..7959)
+                     /gene="yaaJ"
+                     /locus_tag="b0007"
+                     /gene_synonym="ECK0007"
+                     /gene_synonym="JW0006"
+                     /db_xref="EcoGene:EG11555"
+     CDS             complement(6529..7959)
+                     /gene="yaaJ"
+                     /locus_tag="b0007"
+                     /gene_synonym="ECK0007"
+                     /gene_synonym="JW0006"
+                     /function="putative transport; Transport of small
+                     molecules: Amino acids, amines"
+                     /note="inner membrane transport protein;
+                     GO_component: GO:0009274 - peptidoglycan-based cell wall;
+                     GO_component: GO:0019866 - organelle inner membrane"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="putative transporter"
+                     /protein_id="AAC73118.1"
+                     /db_xref="GI:1786188"
+                     /db_xref="ASAP:ABE-0000020"
+                     /db_xref="UniProtKB/Swiss-Prot:P30143"
+                     /db_xref="EcoGene:EG11555"
+                     /translation="MPDFFSFINSVLWGSVMIYLLFGAGCWFTFRTGFVQFRYIRQFG
+                     KSLKNSIHPQPGGLTSFQSLCTSLAARVGSGNLAGVALAITAGGPGAVFWMWVAAFIG
+                     MATSFAECSLAQLYKERDVNGQFRGGPAWYMARGLGMRWMGVLFAVFLLIAYGIIFSG
+                     VQANAVARALSFSFDFPPLVTGIILAVFTLLAITRGLHGVARLMQGFVPLMAIIWVLT
+                     SLVICVMNIGQLPHVIWSIFESAFGWQEAAGGAAGYTLSQAITNGFQRSMFSNEAGMG
+                     STPNAAAAAASWPPHPAAQGIVQMIGIFIDTLVICTASAMLILLAGNGTTYMPLEGIQ
+                     LIQKAMRVLMGSWGAEFVTLVVILFAFSSIVANYIYAENNLFFLRLNNPKAIWCLRIC
+                     TFATVIGGTLLSLPLMWQLADIIMACMAITNLTAILLLSPVVHTIASDYLRQRKLGVR
+                     PVFDPLRYPDIGRQLSPDAWDDVSQE"
+     gene            8238..9191
+                     /gene="talB"
+                     /locus_tag="b0008"
+                     /gene_synonym="ECK0008"
+                     /gene_synonym="JW0007"
+                     /gene_synonym="yaaK"
+                     /db_xref="EcoGene:EG11556"
+     CDS             8238..9191
+                     /gene="talB"
+                     /locus_tag="b0008"
+                     /gene_synonym="ECK0008"
+                     /gene_synonym="JW0007"
+                     /gene_synonym="yaaK"
+                     /EC_number="2.2.1.2"
+                     /function="enzyme; Central intermediary metabolism:
+                     Non-oxidative branch, pentose pathway"
+                     /note="GO_component: GO:0005737 - cytoplasm;
+                     GO_process: GO:0009052 - pentose-phosphate shunt,
+                     non-oxidative branch"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="transaldolase B"
+                     /protein_id="AAC73119.1"
+                     /db_xref="GI:1786189"
+                     /db_xref="ASAP:ABE-0000027"
+                     /db_xref="UniProtKB/Swiss-Prot:P0A870"
+                     /db_xref="EcoGene:EG11556"
+                     /translation="MTDKLTSLRQYTTVVADTGDIAAMKLYQPQDATTNPSLILNAAQ
+                     IPEYRKLIDDAVAWAKQQSNDRAQQIVDATDKLAVNIGLEILKLVPGRISTEVDARLS
+                     YDTEASIAKAKRLIKLYNDAGISNDRILIKLASTWQGIRAAEQLEKEGINCNLTLLFS
+                     FAQARACAEAGVFLISPFVGRILDWYKANTDKKEYAPAEDPGVVSVSEIYQYYKEHGY
+                     ETVVMGASFRNIGEILELAGCDRLTIAPALLKELAESEGAIERKLSYTGEVKARPARI
+                     TESEFLWQHNQDPMAVDKLAEGIRKFAIDQEKLEKMIGDLL"
+     gene            9306..9893
+                     /gene="mog"
+                     /locus_tag="b0009"
+                     /gene_synonym="bisD"
+                     /gene_synonym="chlG"
+                     /gene_synonym="ECK0009"
+                     /gene_synonym="JW0008"
+                     /gene_synonym="mogA"
+                     /gene_synonym="yaaG"
+                     /db_xref="EcoGene:EG11511"
+     CDS             9306..9893
+                     /gene="mog"
+                     /locus_tag="b0009"
+                     /gene_synonym="bisD"
+                     /gene_synonym="chlG"
+                     /gene_synonym="ECK0009"
+                     /gene_synonym="JW0008"
+                     /gene_synonym="mogA"
+                     /gene_synonym="yaaG"
+                     /function="transport; Biosynthesis of cofactors, carriers:
+                     Molybdopterin"
+                     /note="putative molybdochetalase in molybdopterine
+                     biosynthesis;
+                     GO_component: GO:0005737 - cytoplasm;
+                     GO_process: GO:0006777 - Mo-molybdopterin cofactor
+                     biosynthetic process"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="molybdochelatase incorporating molybdenum into
+                     molybdopterin"
+                     /protein_id="AAC73120.1"
+                     /db_xref="GI:1786190"
+                     /db_xref="ASAP:ABE-0000030"
+                     /db_xref="UniProtKB/Swiss-Prot:P0AF03"
+                     /db_xref="EcoGene:EG11511"
+                     /translation="MNTLRIGLVSISDRASSGVYQDKGIPALEEWLTSALTTPFELET
+                     RLIPDEQAIIEQTLCELVDEMSCHLVLTTGGTGPARRDVTPDATLAVADREMPGFGEQ
+                     MRQISLHFVPTAILSRQVGVIRKQALILNLPGQPKSIKETLEGVKDAEGNVVVHGIFA
+                     SVPYCIQLLEGPYVETAPEVVAAFRPKSARRDVSE"
+ORIGIN      
+        1 agcttttcat tctgactgca acgggcaata tgtctctgtg tggattaaaa aaagagtgtc
+       61 tgatagcagc ttctgaactg gttacctgcc gtgagtaaat taaaatttta ttgacttagg
+      121 tcactaaata ctttaaccaa tataggcata gcgcacagac agataaaaat tacagagtac
+      181 acaacatcca tgaaacgcat tagcaccacc attaccacca ccatcaccat taccacaggt
+      241 aacggtgcgg gctgacgcgt acaggaaaca cagaaaaaag cccgcacctg acagtgcggg
+      301 cttttttttt cgaccaaagg taacgaggta acaaccatgc gagtgttgaa gttcggcggt
+      361 acatcagtgg caaatgcaga acgttttctg cgtgttgccg atattctgga aagcaatgcc
+      421 aggcaggggc aggtggccac cgtcctctct gcccccgcca aaatcaccaa ccacctggtg
+      481 gcgatgattg aaaaaaccat tagcggccag gatgctttac ccaatatcag cgatgccgaa
+      541 cgtatttttg ccgaactttt gacgggactc gccgccgccc agccggggtt cccgctggcg
+      601 caattgaaaa ctttcgtcga tcaggaattt gcccaaataa aacatgtcct gcatggcatt
+      661 agtttgttgg ggcagtgccc ggatagcatc aacgctgcgc tgatttgccg tggcgagaaa
+      721 atgtcgatcg ccattatggc cggcgtatta gaagcgcgcg gtcacaacgt tactgttatc
+      781 gatccggtcg aaaaactgct ggcagtgggg cattacctcg aatctaccgt cgatattgct
+      841 gagtccaccc gccgtattgc ggcaagccgc attccggctg atcacatggt gctgatggca
+      901 ggtttcaccg ccggtaatga aaaaggcgaa ctggtggtgc ttggacgcaa cggttccgac
+      961 tactctgctg cggtgctggc tgcctgttta cgcgccgatt gttgcgagat ttggacggac
+     1021 gttgacgggg tctatacctg cgacccgcgt caggtgcccg atgcgaggtt gttgaagtcg
+     1081 atgtcctacc aggaagcgat ggagctttcc tacttcggcg ctaaagttct tcacccccgc
+     1141 accattaccc ccatcgccca gttccagatc ccttgcctga ttaaaaatac cggaaatcct
+     1201 caagcaccag gtacgctcat tggtgccagc cgtgatgaag acgaattacc ggtcaagggc
+     1261 atttccaatc tgaataacat ggcaatgttc agcgtttctg gtccggggat gaaagggatg
+     1321 gtcggcatgg cggcgcgcgt ctttgcagcg atgtcacgcg cccgtatttc cgtggtgctg
+     1381 attacgcaat catcttccga atacagcatc agtttctgcg ttccacaaag cgactgtgtg
+     1441 cgagctgaac gggcaatgca ggaagagttc tacctggaac tgaaagaagg cttactggag
+     1501 ccgctggcag tgacggaacg gctggccatt atctcggtgg taggtgatgg tatgcgcacc
+     1561 ttgcgtggga tctcggcgaa attctttgcc gcactggccc gcgccaatat caacattgtc
+     1621 gccattgctc agggatcttc tgaacgctca atctctgtcg tggtaaataa cgatgatgcg
+     1681 accactggcg tgcgcgttac tcatcagatg ctgttcaata ccgatcaggt tatcgaagtg
+     1741 tttgtgattg gcgtcggtgg cgttggcggt gcgctgctgg agcaactgaa gcgtcagcaa
+     1801 agctggctga agaataaaca tatcgactta cgtgtctgcg gtgttgccaa ctcgaaggct
+     1861 ctgctcacca atgtacatgg ccttaatctg gaaaactggc aggaagaact ggcgcaagcc
+     1921 aaagagccgt ttaatctcgg gcgcttaatt cgcctcgtga aagaatatca tctgctgaac
+     1981 ccggtcattg ttgactgcac ttccagccag gcagtggcgg atcaatatgc cgacttcctg
+     2041 cgcgaaggtt tccacgttgt cacgccgaac aaaaaggcca acacctcgtc gatggattac
+     2101 taccatcagt tgcgttatgc ggcggaaaaa tcgcggcgta aattcctcta tgacaccaac
+     2161 gttggggctg gattaccggt tattgagaac ctgcaaaatc tgctcaatgc aggtgatgaa
+     2221 ttgatgaagt tctccggcat tctttctggt tcgctttctt atatcttcgg caagttagac
+     2281 gaaggcatga gtttctccga ggcgaccacg ctggcgcggg aaatgggtta taccgaaccg
+     2341 gacccgcgag atgatctttc tggtatggat gtggcgcgta aactattgat tctcgctcgt
+     2401 gaaacgggac gtgaactgga gctggcggat attgaaattg aacctgtgct gcccgcagag
+     2461 tttaacgccg agggtgatgt tgccgctttt atggcgaatc tgtcacaact cgacgatctc
+     2521 tttgccgcgc gcgtggcgaa ggcccgtgat gaaggaaaag ttttgcgcta tgttggcaat
+     2581 attgatgaag atggcgtctg ccgcgtgaag attgccgaag tggatggtaa tgatccgctg
+     2641 ttcaaagtga aaaatggcga aaacgccctg gccttctata gccactatta tcagccgctg
+     2701 ccgttggtac tgcgcggata tggtgcgggc aatgacgtta cagctgccgg tgtctttgct
+     2761 gatctgctac gtaccctctc atggaagtta ggagtctgac atggttaaag tttatgcccc
+     2821 ggcttccagt gccaatatga gcgtcgggtt tgatgtgctc ggggcggcgg tgacacctgt
+     2881 tgatggtgca ttgctcggag atgtagtcac ggttgaggcg gcagagacat tcagtctcaa
+     2941 caacctcgga cgctttgccg ataagctgcc gtcagaacca cgggaaaata tcgtttatca
+     3001 gtgctgggag cgtttttgcc aggaactggg taagcaaatt ccagtggcga tgaccctgga
+     3061 aaagaatatg ccgatcggtt cgggcttagg ctccagtgcc tgttcggtgg tcgcggcgct
+     3121 gatggcgatg aatgaacact gcggcaagcc gcttaatgac actcgtttgc tggctttgat
+     3181 gggcgagctg gaaggccgta tctccggcag cattcattac gacaacgtgg caccgtgttt
+     3241 tctcggtggt atgcagttga tgatcgaaga aaacgacatc atcagccagc aagtgccagg
+     3301 gtttgatgag tggctgtggg tgctggcgta tccggggatt aaagtctcga cggcagaagc
+     3361 cagggctatt ttaccggcgc agtatcgccg ccaggattgc attgcgcacg ggcgacatct
+     3421 ggcaggcttc attcacgcct gctattcccg tcagcctgag cttgccgcga agctgatgaa
+     3481 agatgttatc gctgaaccct accgtgaacg gttactgcca ggcttccggc aggcgcggca
+     3541 ggcggtcgcg gaaatcggcg cggtagcgag cggtatctcc ggctccggcc cgaccttgtt
+     3601 cgctctgtgt gacaagccgg aaaccgccca gcgcgttgcc gactggttgg gtaagaacta
+     3661 cctgcaaaat caggaaggtt ttgttcatat ttgccggctg gatacggcgg gcgcacgagt
+     3721 actggaaaac taaatgaaac tctacaatct gaaagatcac aacgagcagg tcagctttgc
+     3781 gcaagccgta acccaggggt tgggcaaaaa tcaggggctg ttttttccgc acgacctgcc
+     3841 ggaattcagc ctgactgaaa ttgatgagat gctgaagctg gattttgtca cccgcagtgc
+     3901 gaagatcctc tcggcgttta ttggtgatga aatcccacag gaaatcctgg aagagcgcgt
+     3961 gcgcgcggcg tttgccttcc cggctccggt cgccaatgtt gaaagcgatg tcggttgtct
+     4021 ggaattgttc cacgggccaa cgctggcatt taaagatttc ggcggtcgct ttatggcaca
+     4081 aatgctgacc catattgcgg gtgataagcc agtgaccatt ctgaccgcga cctccggtga
+     4141 taccggagcg gcagtggctc atgctttcta cggtttaccg aatgtgaaag tggttatcct
+     4201 ctatccacga ggcaaaatca gtccactgca agaaaaactg ttctgtacat tgggcggcaa
+     4261 tatcgaaact gttgccatcg acggcgattt cgatgcctgt caggcgctgg tgaagcaggc
+     4321 gtttgatgat gaagaactga aagtggcgct agggttaaac tcggctaact cgattaacat
+     4381 cagccgtttg ctggcgcaga tttgctacta ctttgaagct gttgcgcagc tgccgcagga
+     4441 gacgcgcaac cagctggttg tctcggtgcc aagcggaaac ttcggcgatt tgacggcggg
+     4501 tctgctggcg aagtcactcg gtctgccggt gaaacgtttt attgctgcga ccaacgtgaa
+     4561 cgataccgtg ccacgtttcc tgcacgacgg tcagtggtca cccaaagcga ctcaggcgac
+     4621 gttatccaac gcgatggacg tgagtcagcc gaacaactgg ccgcgtgtgg aagagttgtt
+     4681 ccgccgcaaa atctggcaac tgaaagagct gggttatgca gccgtggatg atgaaaccac
+     4741 gcaacagaca atgcgtgagt taaaagaact gggctacact tcggagccgc acgctgccgt
+     4801 agcttatcgt gcgctgcgtg atcagttgaa tccaggcgaa tatggcttgt tcctcggcac
+     4861 cgcgcatccg gcgaaattta aagagagcgt ggaagcgatt ctcggtgaaa cgttggatct
+     4921 gccaaaagag ctggcagaac gtgctgattt acccttgctt tcacataatc tgcccgccga
+     4981 ttttgctgcg ttgcgtaaat tgatgatgaa tcatcagtaa aatctattca ttatctcaat
+     5041 caggccgggt ttgcttttat gcagcccggc ttttttatga agaaattatg gagaaaaatg
+     5101 acagggaaaa aggagaaatt ctcaataaat gcggtaactt agagattagg attgcggaga
+     5161 ataacaaccg ccgttctcat cgagtaatct ccggatatcg acccataacg ggcaatgata
+     5221 aaaggagtaa cctgtgaaaa agatgcaatc tatcgtactc gcactttccc tggttctggt
+     5281 cgctcccatg gcagcacagg ctgcggaaat tacgttagtc ccgtcagtaa aattacagat
+     5341 aggcgatcgt gataatcgtg gctattactg ggatggaggt cactggcgcg accacggctg
+     5401 gtggaaacaa cattatgaat ggcgaggcaa tcgctggcac ctacacggac cgccgccacc
+     5461 gccgcgccac cataagaaag ctcctcatga tcatcacggc ggtcatggtc caggcaaaca
+     5521 tcaccgctaa atgacaaatg ccgggtaaca atccggcatt cagcgcctga tgcgacgctg
+     5581 gcgcgtctta tcaggcctac gttaattctg caatatattg aatctgcatg cttttgtagg
+     5641 caggataagg cgttcacgcc gcatccggca ttgactgcaa acttaacgct gctcgtagcg
+     5701 tttaaacacc agttcgccat tgctggagga atcttcatca aagaagtaac cttcgctatt
+     5761 aaaaccagtc agttgctctg gtttggtcag ccgattttca ataatgaaac gactcatcag
+     5821 accgcgtgct ttcttagcgt agaagctgat gatcttaaat ttgccgttct tctcatcgag
+     5881 gaacaccggc ttgataatct cggcattcaa tttcttcggc ttcaccgatt taaaatactc
+     5941 atctgacgcc agattaatca ccacattatc gccttgtgct gcgagcgcct cgttcagctt
+     6001 gttggtgatg atatctcccc agaattgata cagatctttc cctcgggcat tctcaagacg
+     6061 gatccccatt tccagacgat aaggctgcat taaatcgagc gggcggagta cgccatacaa
+     6121 gccggaaagc attcgcaaat gctgttgggc aaaatcgaaa tcgtcttcgc tgaaggtttc
+     6181 ggcctgcaag ccggtgtaga catcaccttt aaacgccaga atcgcctggc gggcattcgc
+     6241 cggcgtgaaa tctggctgcc agtcatgaaa gcgagcggcg ttgatacccg ccagtttgtc
+     6301 gctgatgcgc atcagcgtgc taatctgcgg aggcgtcagt ttccgcgcct catggatcaa
+     6361 ctgctgggaa ttgtctaaca gctccggcag cgtatagcgc gtggtggtca acgggctttg
+     6421 gtaatcaagc gttttcgcag gtgaaataag aatcagcata tccagtcctt gcaggaaatt
+     6481 tatgccgact ttagcaaaaa atgagaatga gttgatcgat agttgtgatt actcctgcga
+     6541 aacatcatcc cacgcgtccg gagaaagctg gcgaccgata tccggataac gcaatggatc
+     6601 aaacaccggg cgcacgccga gtttacgctg gcgtagataa tcactggcaa tggtatgaac
+     6661 cacaggcgag agcagtaaaa tggcggtcaa attggtaata gccatgcagg ccattatgat
+     6721 atctgccagt tgccacatca gcggaaggct tagcaaggtg ccgccgatga ccgttgcgaa
+     6781 ggtgcagatc cgcaaacacc agatcgcttt agggttgttc aggcgtaaaa agaagagatt
+     6841 gttttcggca taaatgtagt tggcaacgat ggagctgaag gcaaacagaa taaccacaag
+     6901 ggtaacaaac tcagcacccc aggaacccat tagcacccgc atcgccttct ggataagctg
+     6961 aataccttcc agcggcatgt aggttgtgcc gttacccgcc agtaatatca gcatggcgct
+     7021 tgccgtacag atgaccaggg tgtcgataaa aatgccaatc atctggacaa tcccttgcgc
+     7081 tgccggatgc ggaggccagg acgccgctgc cgctgccgcg tttggcgtcg aacccattcc
+     7141 cgcctcattg gaaaacatac tgcgctgaaa accgttagta atcgcctggc ttaaggtata
+     7201 tcccgccgcg ccgcctgccg cttcctgcca gccaaaagca ctctcaaaaa tagaccaaat
+     7261 gacgtgggga agttgcccga tattcattac gcaaattacc aggctggtca gtacccagat
+     7321 tatcgccatc aacgggacaa agccctgcat gagccgggcg acgccatgaa gaccgcgagt
+     7381 gattgccagc agagtaaaga cagcgagaat aatgcctgtc accagcgggg gaaaatcaaa
+     7441 agaaaaactc agggcgcggg caacggcgtt cgcttgaact ccgctgaaaa ttatgccata
+     7501 ggcgatgagc aaaaagacgg cgaacagaac gcccatccag cgcatcccca gcccgcgcgc
+     7561 catataccat gccggtccgc cacgaaactg cccattgacg tcacgttctt tataaagttg
+     7621 tgccagagaa cattcggcaa acgaggtcgc catgccgata aacgcggcaa cccacatcca
+     7681 aaagacggct ccaggtccac cggcggtaat agccagcgca acgccggcca ggttgccgct
+     7741 acccacgcgc gccgcaagac tggtacacaa tgactgaaat gaggttaaac cgcctggctg
+     7801 tggatgaatg ctatttttaa gacttttgcc aaactggcgg atgtagcgaa actgcacaaa
+     7861 tccggtgcga aaagtgaacc aacaacctgc gccgaagagc aggtaaatca ttaccgatcc
+     7921 ccaaaggacg ctgttaatga aggagaaaaa atctggcatg catatccctc ttattgccgg
+     7981 tcgcgatgac tttcctgtgt aaacgttacc aattgtttaa gaagtatata cgctacgagg
+     8041 tacttgataa cttctgcgta gcatacatga ggttttgtat aaaaatggcg ggcgatatca
+     8101 acgcagtgtc agaaatccga aacagtctcg cctggcgata accgtcttgt cggcggttgc
+     8161 gctgacgttg cgtcgtgata tcatcagggc agaccggtta catcccccta acaagctgtt
+     8221 taaagagaaa tactatcatg acggacaaat tgacctccct tcgtcagtac accaccgtag
+     8281 tggccgacac tggggacatc gcggcaatga agctgtatca accgcaggat gccacaacca
+     8341 acccttctct cattcttaac gcagcgcaga ttccggaata ccgtaagttg attgatgatg
+     8401 ctgtcgcctg ggcgaaacag cagagcaacg atcgcgcgca gcagatcgtg gacgcgaccg
+     8461 acaaactggc agtaaatatt ggtctggaaa tcctgaaact ggttccgggc cgtatctcaa
+     8521 ctgaagttga tgcgcgtctt tcctatgaca ccgaagcgtc aattgcgaaa gcaaaacgcc
+     8581 tgatcaaact ctacaacgat gctggtatta gcaacgatcg tattctgatc aaactggctt
+     8641 ctacctggca gggtatccgt gctgcagaac agctggaaaa agaaggcatc aactgtaacc
+     8701 tgaccctgct gttctccttc gctcaggctc gtgcttgtgc ggaagcgggc gtgttcctga
+     8761 tctcgccgtt tgttggccgt attcttgact ggtacaaagc gaataccgat aagaaagagt
+     8821 acgctccggc agaagatccg ggcgtggttt ctgtatctga aatctaccag tactacaaag
+     8881 agcacggtta tgaaaccgtg gttatgggcg caagcttccg taacatcggc gaaattctgg
+     8941 aactggcagg ctgcgaccgt ctgaccatcg caccggcact gctgaaagag ctggcggaga
+     9001 gcgaaggggc tatcgaacgt aaactgtctt acaccggcga agtgaaagcg cgtccggcgc
+     9061 gtatcactga gtccgagttc ctgtggcagc acaaccagga tccaatggca gtagataaac
+     9121 tggcggaagg tatccgtaag tttgctattg accaggaaaa actggaaaaa atgatcggcg
+     9181 atctgctgta atcattctta gcgtgaccgg gaagtcggtc acgctacctc ttctgaagcc
+     9241 tgtctgtcac tcccttcgca gtgtatcatt ctgtttaacg agactgttta aacggaaaaa
+     9301 tcttgatgaa tactttacgt attggcttag tttccatctc tgatcgcgca tccagcggcg
+     9361 tttatcagga taaaggcatc cctgcgctgg aagaatggct gacatcggcg ctaaccacgc
+     9421 cgtttgaact ggaaacccgc ttaatccccg atgagcaggc gatcatcgag caaacgttgt
+     9481 gtgagctggt ggatgaaatg agttgccatc tggtgctcac cacgggcgga actggcccgg
+     9541 cgcgtcgtga cgtaacgccc gatgcgacgc tggcagtagc ggaccgcgag atgcctggct
+     9601 ttggtgaaca gatgcgccag atcagcctgc attttgtacc aactgcgatc ctttcgcgtc
+     9661 aggtgggcgt gattcgcaaa caggcgctga tccttaactt acccggtcag ccgaagtcta
+     9721 ttaaagagac gctggaaggt gtgaaggacg ctgagggtaa cgttgtggta cacggtattt
+     9781 ttgccagcgt accgtactgc attcagttgc tggaagggcc atacgttgaa acggcaccgg
+     9841 aagtggttgc agcattcaga ccgaagagtg caagacgcga cgttagcgaa taaaaaaatc
+     9901 cccccgagcg gggggatctc aaaacaatta gtgggattca ccaatcggca gaacggtgcg
+     9961 accaaactgc tcgttcagta cttcacccat cgccagatag attgcgctgg caccgcagat
+    10021 cagcccaatc cagccggcaa agtggatgat tgcggcgtta ccggcaatgt taccgatcgc
