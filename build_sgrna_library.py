@@ -105,7 +105,14 @@ def get_regions_from_genbank(genbank_file):
     for feature in item.features:
       if feature.type != 'gene':
         continue
-      name = feature.qualifiers['locus_tag'][0]
+      if 'locus_tag' in feature.qualifiers:
+        name = feature.qualifiers['locus_tag'][0]
+      elif 'gene' in feature.qualifiers:
+        name = feature.qualifiers['gene'][0]
+      else:
+        logging.error('No locus_tag or gene for {feature}.'.format(**vars()))
+        logging.error('FAILED RUN'.format(**vars()))
+        sys.exit(2)
       start = int(feature.location.start)
       end = int(feature.location.end)
       if feature.location.strand == 1:
