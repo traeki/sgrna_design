@@ -20,38 +20,31 @@ Primarily you will use
 
     build_sgrna_targets.py
 
-which you can call with -h to learn about its flags.  The two required
-arguments are
+which you can call with -h to learn about its flags.
 
-    input_fasta_genome_name [example -- testdata/test.fna]
+The normal usage case is to call the script with a genbank file like so:
 
-and
+    ./build_sgrna_library.py --input_genbank_genome_name testdata/U00096.3_full_sequence.gb
 
-    target_regions_file [example -- testdata/test_regions.tsv]
+Which will generate a file called
 
-so to run on the sample files, you would call:
+    testdata/U00096.3_full_sequence.targets.all.tsv
 
-    ./build_sgrna_library.py --target_regions_file testdata/test_regions.tsv --input_fasta_genome_name testdata/doubletest.fna
+Specifying all of the targets for the provided genome (the test genome, in this
+case), annotated with the locus tag, and scored for specificity (the final
+column)
 
-If you have a gff file and want to use all the genes, you can try using
-(possibly with some modification)
+For bacteria we suggest using guides that
+*   have a small, positive offset
+*   are on the antisense strand ('anti' in the STRAND column)
+*   have a SPECIFICITY score of 39
 
-    extract_gff_to_genes.py
+If a guide meeting those criteria is not available, lower specificity can be
+used, but you should check for near-matches elsewhere in the genome.
 
-**Important note:** The fna identifier for each block of DNA (chromosome or, in
-the case of bacteria often the entire genome) must match the identifier in the
-gff/region file.  Shockingly often, this is not the case, even when the
-gff/region and the fasta come from the same source.  Try changing the
-identifier of your fasta file (the identifier is the text following the '>'
-character on the first line of each section) to match the identifier in your
-gff/region file before running these scripts.
+Alternately you can use a guide with a higher offset, or a negative offset, or
+on the template strand, but you should expect lower-fold or even negligible knockdown.
 
-## IGNORE THE REST, REFERS TO CURRENTLY UNMAINTAINED SCRIPT
+(the WEAKNESS column is not relevant in the current output, ignore it)
 
-Once you have created your target list with the build function, you can either
-search the file manually for your gene of interest, or run
-
-    subselect_sgrna_library.py
-
-which groups the sgrna targets by gene and calls a chosen function to choose a
-subset for a final library.
+This code will currently only work for the S. pyogenes NGG PAM sequence.
