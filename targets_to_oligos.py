@@ -21,7 +21,7 @@ import tempfile
 
 from Bio import SeqIO
 
-from sgrna_target import sgrna_target
+from .sgrna_target import sgrna_target
 
 
 logging.basicConfig(level=logging.INFO,

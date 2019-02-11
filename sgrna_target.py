@@ -9,7 +9,6 @@ import logging
 import os.path
 import re
 import subprocess
-import string
 import sys
 
 from Bio import SeqIO
@@ -25,7 +24,7 @@ class SampleError(Error):
   pass
 
 
-DNA_PAIRINGS = string.maketrans('atcgATCG', 'tagcTAGC')
+DNA_PAIRINGS = str.maketrans('atcgATCG', 'tagcTAGC')
 
 def revcomp(x):
   return x.translate(DNA_PAIRINGS)[::-1]

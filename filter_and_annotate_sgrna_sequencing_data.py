@@ -38,7 +38,7 @@ def get_comparison_regions(parent_plasmid):
   """
   logging.info(
       'Extracting regions from parent plasmid.'.format(**vars()))
-  items = [x for x in parent_plasmid.features if x.qualifiers.has_key('label')]
+  items = [x for x in parent_plasmid.features if 'label' in x.qualifiers]
   rois = [x for x in items if x.qualifiers['label'][0] == 'region_of_interest']
   if len(rois) > 1:
     logging.error("More than one region_of_interest label in plasmid.")
@@ -48,7 +48,7 @@ def get_comparison_regions(parent_plasmid):
     sys.exit(1)
   roi = rois[0].extract(parent_plasmid)
   # (Yeah, recreating items is redundant, I'm just redoing it for clarity.)
-  items = [x for x in parent_plasmid.features if x.qualifiers.has_key('label')]
+  items = [x for x in parent_plasmid.features if 'label' in x.qualifiers]
   targets = [x for x in items if x.qualifiers['label'][0] == 'target']
   if len(targets) > 1:
     logging.error("More than one target label in plasmid.")
@@ -159,7 +159,7 @@ def main():
   (roi_front, parent_target, roi_back) = get_comparison_regions(parent_vector)
   target_library[parent_target] = 'PARENT'
   # Annotate the input.
-  for input_id, input_seq in input_records.iteritems():
+  for input_id, input_seq in input_records.items():
     # Try to find the region of interest somewhere.
     roi_matched = has_items_in_series(input_seq,
                                       roi_front,

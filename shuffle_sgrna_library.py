@@ -21,7 +21,7 @@ import tempfile
 
 from Bio import SeqIO
 
-from sgrna_target import sgrna_target
+from .sgrna_target import sgrna_target
 
 
 logging.basicConfig(level=logging.INFO,
@@ -54,7 +54,7 @@ def eval_specificity(controls, fasta):
   threshold = 39
   fastq_tempfile, fastq_name = tempfile.mkstemp()
   with contextlib.closing(os.fdopen(fastq_tempfile, 'w')) as fastq_file:
-    for name, t in controls.iteritems():
+    for name, t in controls.items():
       fullseq = t.sequence_with_pam()
       fastq_file.write(
           '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
@@ -96,7 +96,7 @@ def eval_specificity(controls, fasta):
 
 def shuffle_targets(targets, needed):
   controls = dict()
-  for i in xrange(needed):
+  for i in range(needed):
     t = copy.deepcopy(random.choice(targets))
     bases = list(t.target)
     random.shuffle(bases)

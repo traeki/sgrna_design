@@ -4,7 +4,7 @@
 
 import os.path
 
-from sgrna_target import sgrna_target
+from .sgrna_target import sgrna_target
 
 bsu_essential = '/Users/jsh/gd/qilab/jsh/refseq/bsu_168/bsu_168.targets.essential.sub.tsv'
 bsu_essential_template = 'GCATCGAGCTGAAGGGCAACTAGT{target}GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTGAGACCATCCGCCACATGCAGCTC'

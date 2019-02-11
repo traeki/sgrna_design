@@ -4,3 +4,4 @@ docs/_build
 environment/*
 *.bak
 __pycache__
+multigen/*

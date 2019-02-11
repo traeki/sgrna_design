@@ -1,3 +1,5 @@
 *.ebwt
 *.targets.all.tsv
 *.gb.fasta
+*.gb.merged.fasta
+*.merged.gb

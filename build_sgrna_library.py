@@ -13,7 +13,6 @@ import os.path
 import re
 import shutil
 import subprocess
-import string
 import sys
 import tempfile
 
@@ -33,7 +32,7 @@ class SampleError(Error):
   pass
 
 
-DNA_PAIRINGS = string.maketrans('atcgATCG', 'tagcTAGC')
+DNA_PAIRINGS = str.maketrans('atcgATCG', 'tagcTAGC')
 
 def revcomp(x):
   return x.translate(DNA_PAIRINGS)[::-1]
@@ -191,14 +190,17 @@ def ascribe_specificity(targets, genome_fasta_name, sam_copy):
   for threshold in (39,30,20,11,1):
     fastq_tempfile, fastq_name = tempfile.mkstemp()
     with contextlib.closing(os.fdopen(fastq_tempfile, 'w')) as fastq_file:
-      for name, t in targets.iteritems():
+      wrote_anything = False
+      for name, t in targets.items():
         if t.specificity > 0:
           continue
         fullseq = revcomp(t.sequence_with_pam())
         fastq_file.write(
             '@{name}\n{fullseq}\n+\n{phredString}\n'.format(**vars()))
-    mark_specificity_threshold(
-        targets, fastq_name, genome_fasta_name, threshold, sam_copy)
+        wrote_anything = True
+    if wrote_anything:
+      mark_specificity_threshold(
+          targets, fastq_name, genome_fasta_name, threshold, sam_copy)
 
 
 def mark_specificity_threshold(
@@ -223,6 +225,7 @@ def mark_specificity_threshold(
   command.append(fastq_name)  # faked fastq temp file
   command.append(specific_name)  # unique hits
   command = [str(x) for x in command]
+  logging.info('Marking specificity threshold {threshold}'.format(**locals()))
   logging.info(' '.join(command))
   bowtie_job = subprocess.Popen(command)
   # Check for problems
@@ -262,7 +265,7 @@ def label_targets(targets,
   counter = 0
   # Organize targets by chromosome and then start location.
   per_chrom_sorted_targets = collections.defaultdict(list)
-  for name, x in targets.iteritems():
+  for name, x in targets.items():
     per_chrom_sorted_targets[x.chrom].append(x)
   for x in per_chrom_sorted_targets:
     per_chrom_sorted_targets[x].sort(key=lambda x:(x.start, x.end))
@@ -314,7 +317,7 @@ def label_targets(targets,
       returnable.sense_strand = (reverse_strand_gene == target.reverse)
       anno_targets.append(returnable)
   if include_unlabeled:
-    for name, target in targets.iteritems():
+    for name, target in targets.items():
       if name not in found:
         anno_targets.append(copy.deepcopy(target))
   return anno_targets
@@ -327,6 +330,7 @@ def parse_args():
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   group = parser.add_mutually_exclusive_group(required=True)
   group.add_argument('--input_genbank_genome_name', type=str,
+                      action='append',
                       help='Location of genome file in GenBank format.')
   group.add_argument('--input_fasta_genome_name', type=str,
                       help='Location of genome file in FASTA format.')
@@ -351,20 +355,26 @@ def parse_args():
   parser.add_argument('--target_len', default=20, type=int,
                       help='NOT YET IMPLEMENTED DO NOT USE!')
   args = parser.parse_args()
+  # TODO(jsh): aggregate genbanks up front, then process collectively
+  fakedfastaname = None
+  if args.input_genbank_genome_name is not None:
+    parts = os.path.splitext(args.input_genbank_genome_name[0])
+    mergename = parts[0] + '.merged' + parts[1]
+    with open(mergename, 'w') as outhandle:
+      files = args.input_genbank_genome_name
+      chunks = itertools.chain(*[SeqIO.parse(x, 'genbank') for x in files])
+      SeqIO.write(chunks, outhandle, 'genbank')
+    fakedfastaname = mergename + '.fasta'
+    SeqIO.convert(mergename, 'genbank', fakedfastaname, 'fasta')
+    args.input_genbank_genome_name = mergename
+    args.input_fasta_genome_name = fakedfastaname
   if args.tsv_file_name is None:
-    if args.input_fasta_genome_name is not None:
-      base = os.path.splitext(args.input_fasta_genome_name)[0]
-    else:
-      base = os.path.splitext(args.input_genbank_genome_name)[0]
+    base = os.path.splitext(args.input_fasta_genome_name)[0]
     args.tsv_file_name =  base + '.targets.all.tsv'
   if (args.target_regions_file is None and
       args.input_genbank_genome_name is None):
     logging.fatal('No regions file specified with fasta genome.')
     sys.exit(2)
-  if args.input_fasta_genome_name is None:
-    args.input_fasta_genome_name = args.input_genbank_genome_name + '.fasta'
-    SeqIO.convert(args.input_genbank_genome_name, 'genbank',
-                  args.input_fasta_genome_name, 'fasta')
   return args
 
 

@@ -21,7 +21,7 @@ import tempfile
 
 from Bio import SeqIO
 
-from sgrna_target import sgrna_target
+from .sgrna_target import sgrna_target
 
 
 logging.basicConfig(level=logging.INFO,
@@ -75,7 +75,7 @@ def main():
   targets = (sgrna_target.from_tsv(x)
                   for x in args.input_tsv_file
                   if not x.startswith('#'))
-  filtered = itertools.ifilterfalse(contains_site, targets)
+  filtered = itertools.filterfalse(contains_site, targets)
   logging.info('Writing uncut targets to {0}'.format(args.output_tsv_file))
   with open(args.output_tsv_file, 'w') as output_file:
     for x in filtered:
