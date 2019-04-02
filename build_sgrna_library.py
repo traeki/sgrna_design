@@ -101,29 +101,35 @@ def get_regions_from_genbank(genbank_file):
   target_regions = list()
   for item in SeqIO.parse(genbank_file, 'genbank'):
     chrom = item.id
-    for feature in item.features:
-      if feature.type != 'gene':
+    foundthings = False
+    for ftype in ('gene', 'CDS'):
+      if foundthings:
         continue
-      if 'locus_tag' in feature.qualifiers:
-        name = feature.qualifiers['locus_tag'][0]
-      elif 'gene' in feature.qualifiers:
-        name = feature.qualifiers['gene'][0]
-      else:
-        logging.error('No locus_tag or gene for {feature}.'.format(**vars()))
-        logging.error('FAILED RUN'.format(**vars()))
-        sys.exit(2)
-      start = int(feature.location.start)
-      end = int(feature.location.end)
-      if feature.location.strand == 1:
-        target_regions.append((name, chrom, start, end, '+'))
-      elif feature.location.strand == -1:
-        target_regions.append((name, chrom, start, end, '-'))
-      else:
-        # If we don't know what strand it's on, just claim all targets.
-        target_regions.append((name, chrom, start, end, '+'))
-        target_regions.append((name, chrom, start, end, '-'))
-  logging.info(
-      'Found {0} target regions in genbank file.'.format(len(target_regions)))
+      for feature in item.features:
+        if feature.type != ftype:
+          continue
+        if 'locus_tag' in feature.qualifiers:
+          name = feature.qualifiers['locus_tag'][0]
+        elif 'gene' in feature.qualifiers:
+          name = feature.qualifiers['gene'][0]
+        else:
+          logging.error('No locus_tag or gene for {feature}.'.format(**vars()))
+          template = 'BAILING OUT UNTIL MISSING FEATURE-NAME ISSUE IS RESOLVED'
+          logging.error(template.format(**vars()))
+          sys.exit(2)
+        foundthings = True
+        start = int(feature.location.start)
+        end = int(feature.location.end)
+        if feature.location.strand == 1:
+          target_regions.append((name, chrom, start, end, '+'))
+        elif feature.location.strand == -1:
+          target_regions.append((name, chrom, start, end, '-'))
+        else:
+          # If we don't know what strand it's on, just claim all targets.
+          target_regions.append((name, chrom, start, end, '+'))
+          target_regions.append((name, chrom, start, end, '-'))
+    logging.info(
+        'Found {0} target regions in genbank file.'.format(len(target_regions)))
   return target_regions
 
 
