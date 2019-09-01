@@ -94,7 +94,6 @@ class sgrna_target(object):
     self.end = int(end)
     self.reverse = bool_from_rev(reverse)
     self.sense_strand = None
-    self.weakness = 0
     self.specificity = 0
 
   @classmethod
@@ -112,19 +111,17 @@ class sgrna_target(object):
      end,
      reverse,
      sense_strand,
-     weakness,
      specificity) = tsv.strip().split(sep)
     t = sgrna_target(target, pam, chrom, start, end, reverse)
     t.gene = none_or_str(gene)
     t.offset = none_or_int(offset)
     t.sense_strand = bool_from_sense(sense_strand)
-    t.weakness = none_or_int(weakness)
     t.specificity = none_or_int(specificity)
     return t
 
   @classmethod
   def header(cls, sep='\t'):
-    return sep.join([x.upper() for x in [
+    return sep.join([
       'gene',
       'offset',
       'target',
@@ -132,10 +129,9 @@ class sgrna_target(object):
       'chrom',
       'start',
       'end',
-      'reverse',
-      'sense_strand',
-      'weakness',
-      'specificity']])
+      'repldir',
+      'transdir',
+      'specificity'])
 
   def __str__(self, sep='\t'):
     if self.reverse:
@@ -156,7 +152,6 @@ class sgrna_target(object):
       self.end,
       rev_str,
       sst_str,
-      self.weakness,
       self.specificity]])
 
   def id_str(self, sep=';'):

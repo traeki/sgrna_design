@@ -252,14 +252,12 @@ def mark_specificity_threshold(
 def label_targets(targets,
                   target_regions,
                   chrom_lens,
-                  include_unlabeled,
                   allow_partial_overlap):
   """Annotate targets according to overlaps with gff entries.
   Args:
     targets: the targets to annotate.
     target_regions: the target regions for which to produce annotations
     chrom_lens: mapping from chrom name to sequence length.
-    include_unlabeled: if true, add unlabeled versions of full target set.
     allow_partial_overlap: Include targets which only partially overlap region.
   Returns:
     anno_targets: list of targets with added region annotations
@@ -322,10 +320,9 @@ def label_targets(targets,
       returnable.offset = offset
       returnable.sense_strand = (reverse_strand_gene == target.reverse)
       anno_targets.append(returnable)
-  if include_unlabeled:
-    for name, target in targets.items():
-      if name not in found:
-        anno_targets.append(copy.deepcopy(target))
+  for name, target in targets.items():
+    if name not in found:
+      anno_targets.append(copy.deepcopy(target))
   return anno_targets
 
 
@@ -334,53 +331,42 @@ def parse_args():
   logging.info('Parsing command line.')
   parser = argparse.ArgumentParser(
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-  group = parser.add_mutually_exclusive_group(required=True)
-  group.add_argument('--input_genbank_genome_name', type=str,
-                      action='append',
-                      help='Location of genome file in GenBank format.')
-  group.add_argument('--input_fasta_genome_name', type=str,
-                      help='Location of genome file in FASTA format.')
-  parser.add_argument('--sam_copy', type=str,
-                      help='Copy of sam file from (final) bowtie run.',
-                      default=None)
-  parser.add_argument('--tsv_file_name', type=str,
-                      help='Output file to create.', default=None)
-  parser.add_argument('--target_regions_file', type=str,
-                      help='Location of target regions file in tsv format.')
-  parser.add_argument('--include_unlabeled', action='store_true',
-      default=False,
-      help='Output targets even if they overlapped no target region.')
-  parser.add_argument('--only_include_fully_overlapping', action='store_false',
+  parser.add_argument(
+      '--input_genbank_genome_name', type=str,
+      action='append',
+      help='Location of genome file in GenBank format (can be repeated).',
+      required=True)
+  parser.add_argument(
+      '--sam_copy', type=str,
+      help='[optional] Copy sam tmpfile from (final) bowtie run to here.',
+      default=None)
+  parser.add_argument(
+      '--tsv_output_file', type=str,
+      help='[optional] Specified name for tab-separated output file.',
+      default=None)
+  parser.add_argument(
+      '--only_include_fully_overlapping', action='store_false',
       dest='allow_partial_overlap', default=True,
       help='Only label targets which are fully contained in the region.')
-  # TODO(jsh) Before using different PAMs, need phred faking flag for PAM.
-  # TODO(jsh) allow "n" characters by substituting to ".".
-  parser.add_argument('--pam', default='.gg', type=str,
-                      help='NOT YET IMPLEMENTED DO NOT USE!')
-  # TODO(jsh) Need to take correct fraction of phred-score string to unbreak.
-  parser.add_argument('--target_len', default=20, type=int,
-                      help='NOT YET IMPLEMENTED DO NOT USE!')
   args = parser.parse_args()
-  # TODO(jsh): aggregate genbanks up front, then process collectively
-  fakedfastaname = None
-  if args.input_genbank_genome_name is not None:
-    parts = os.path.splitext(args.input_genbank_genome_name[0])
-    mergename = parts[0] + '.merged' + parts[1]
-    with open(mergename, 'w') as outhandle:
-      files = args.input_genbank_genome_name
-      chunks = itertools.chain(*[SeqIO.parse(x, 'genbank') for x in files])
-      SeqIO.write(chunks, outhandle, 'genbank')
-    fakedfastaname = mergename + '.fasta'
-    SeqIO.convert(mergename, 'genbank', fakedfastaname, 'fasta')
-    args.input_genbank_genome_name = mergename
-    args.input_fasta_genome_name = fakedfastaname
-  if args.tsv_file_name is None:
-    base = os.path.splitext(args.input_fasta_genome_name)[0]
-    args.tsv_file_name =  base + '.targets.all.tsv'
-  if (args.target_regions_file is None and
-      args.input_genbank_genome_name is None):
-    logging.fatal('No regions file specified with fasta genome.')
-    sys.exit(2)
+  # TODO(jsh): add code to handle alternate PAMs and/or guide lengths/shapes
+  args.pam = '.gg'
+  # TODO(jsh): add code to handle alternate PAMs and/or guide lengths/shapes
+  args.target_len = 20
+  fastafile = None
+  parts = os.path.splitext(args.input_genbank_genome_name[0])
+  mergename = parts[0] + '.merged' + parts[1]
+  with open(mergename, 'w') as outhandle:
+    files = args.input_genbank_genome_name
+    chunks = itertools.chain(*[SeqIO.parse(x, 'genbank') for x in files])
+    SeqIO.write(chunks, outhandle, 'genbank')
+  fastafile = mergename + '.fasta'
+  SeqIO.convert(mergename, 'genbank', fastafile, 'fasta')
+  args.input_genbank_genome_name = mergename
+  if args.tsv_output_file is None:
+    base = os.path.splitext(args.input_genbank_genome_name)[0]
+    args.tsv_output_file =  base + '.targets.all.tsv'
+  args.input_fasta_genome_name = fastafile
   return args
 
 
@@ -394,22 +380,18 @@ def main():
   ascribe_specificity(all_targets, args.input_fasta_genome_name, args.sam_copy)
   # Annotate list
   chrom_lens = chrom_lengths(args.input_fasta_genome_name)
-  if args.input_genbank_genome_name is not None:
-    target_regions = get_regions_from_genbank(args.input_genbank_genome_name)
-  else:
-    target_regions = parse_target_regions(args.target_regions_file)
+  target_regions = get_regions_from_genbank(args.input_genbank_genome_name)
   all_targets = label_targets(all_targets,
                               target_regions,
                               chrom_lens,
-                              args.include_unlabeled,
                               args.allow_partial_overlap)
   # Generate output
   total_count = len(all_targets)
   logging.info(
-      'Writing {total_count} annotated targets to {args.tsv_file_name}'.format(
+      'Writing {total_count} annotated targets to {args.tsv_output_file}'.format(
           **vars()))
-  with open(args.tsv_file_name, 'w') as tsv_file:
-    tsv_file.write('#' + sgrna_target.header() + '\n')
+  with open(args.tsv_output_file, 'w') as tsv_file:
+    tsv_file.write(sgrna_target.header() + '\n')
     for target in all_targets:
       tsv_file.write(str(target) + '\n')
 
