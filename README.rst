@@ -1,8 +1,6 @@
 sgRNA Design Scripts
 ====================
-
 Author: John S. Hawkins [really@gmail.com]
-
 Prerequisites
 -------------------------------------------------
 
@@ -23,11 +21,11 @@ non-bowtie2 version in your enviroment.
 How to use this code
 --------------------
 
-Primarily you will use the script buid_sgrna_targets.py.  See
+Primarily you will use the script buid_sgrna_library.py.  See
 
 ::
 
-    build_sgrna_targets.py -h
+    build_sgrna_library.py -h
 
 for usage information.
 
