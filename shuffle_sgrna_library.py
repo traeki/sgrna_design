@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+# Author: John Hawkins (jsh) [really@gmail.com]
 
 print(
     '''This file is deprecated.
@@ -7,3 +10,4 @@ print(
     https://github.com/traeki/sgrna_design
 
     '''
+)
