@@ -1,6 +1,8 @@
 sgRNA Design Scripts
 ====================
+
 Author: John S. Hawkins [really@gmail.com]
+
 Prerequisites
 -------------------------------------------------
 
